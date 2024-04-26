@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	version="4.0">
+	<display-name>Vapeur-Back-Office</display-name>
+	
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>/WEB-INF/app/*</url-pattern>
+			<include-prelude>/WEB-INF/jstl.jsp</include-prelude>
+			<include-prelude>/WEB-INF/layout/head.jsp</include-prelude>
+			<include-prelude>/WEB-INF/layout/header.jsp</include-prelude>
+			<include-prelude>/WEB-INF/layout/breadcrumb.jsp</include-prelude>
+			<include-coda>/WEB-INF/layout/footer.jsp</include-coda>
+			<include-coda>/WEB-INF/layout/foot.jsp</include-coda>
+		</jsp-property-group>
+
+		<jsp-property-group>
+			<url-pattern>/WEB-INF/error/*</url-pattern>
+			<include-prelude>/WEB-INF/jstl.jsp</include-prelude>
+			<include-prelude>/WEB-INF/layout/head.jsp</include-prelude>
+			<include-prelude>/WEB-INF/layout/header.jsp</include-prelude>
+			<include-coda>/WEB-INF/layout/footer.jsp</include-coda>
+			<include-coda>/WEB-INF/layout/foot.jsp</include-coda>
+		</jsp-property-group>
+	</jsp-config>
+
+	<filter>
+		<filter-name>CharsetFilter</filter-name>
+		<filter-class>com.vapeur.config.CharsetFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CharsetFilter</filter-name>
+		<url-pattern>/WEB-INF/*</url-pattern>
+	</filter-mapping>
+
+
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/assets/*</url-pattern>
+	</servlet-mapping>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/error/404.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/WEB-INF/error/403.jsp</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>405</error-code>
+		<location>/WEB-INF/error/405.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/error/500.jsp</location>
+	</error-page>
+
+</web-app>
