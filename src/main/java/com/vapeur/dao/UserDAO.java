@@ -203,7 +203,7 @@ public class UserDAO {
 		// TODO Auto-generated method stub
 		try {
 
-			PreparedStatement ps = Database.connexion.prepareStatement("DELETE FROM clients WHERE id = ?");
+			PreparedStatement ps = Database.connexion.prepareStatement("DELETE FROM users WHERE id = ?");
 			ps.setInt(1, user_id);
 
 			ps.executeUpdate();

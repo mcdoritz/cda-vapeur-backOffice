@@ -24,6 +24,13 @@
 			<include-coda>/WEB-INF/layout/footer.jsp</include-coda>
 			<include-coda>/WEB-INF/layout/foot.jsp</include-coda>
 		</jsp-property-group>
+		
+		<jsp-property-group>
+			<url-pattern>/WEB-INF/login/*</url-pattern>
+			<include-prelude>/WEB-INF/jstl.jsp</include-prelude>
+			<include-prelude>/WEB-INF/layout/head.jsp</include-prelude>
+			<include-coda>/WEB-INF/layout/foot.jsp</include-coda>
+		</jsp-property-group>
 
 		<jsp-property-group>
 			<url-pattern>/WEB-INF/error/*</url-pattern>

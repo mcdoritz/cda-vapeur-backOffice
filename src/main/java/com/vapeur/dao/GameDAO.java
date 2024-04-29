@@ -214,11 +214,13 @@ public class GameDAO {
 		ArrayList<Game> gamesList = new ArrayList<>();
 
 		int min;
-		if (page < 2) {
+		if (page > - 1 && page < 2) {
 			min = page;
 
-		} else {
+		} else if(page >= 2){
 			min = (page - 1) * limitPerPage + 1;
+		} else {
+			min = 0;
 		}
 
 		try {
@@ -229,83 +231,95 @@ public class GameDAO {
 			String queryConditions = "";
 			
 			int index = 0;
-			if(genres_id.size() > 0) {
-				queryJoins += " JOIN games_genres ON games_genres.game_id = games.id JOIN genres ON games_genres.genre_id = genres.id ";
-				queryConditions += " AND (";
-				
-				for (int g : genres_id) {
-					queryConditions += "games_genres.genre_id = ? ";
-					if(index != genres_id.size()-1) {
-						queryConditions += "OR ";
-					}
-					index++;
-				}
-				queryConditions += " ) ";
+			if (genres_id != null) {
+			    if (genres_id.size() > 0) {
+			        queryJoins += " JOIN games_genres ON games_genres.game_id = games.id JOIN genres ON games_genres.genre_id = genres.id ";
+			        queryConditions += " AND (";
+			        
+			        for (int g : genres_id) {
+			            queryConditions += "games_genres.genre_id = ? ";
+			            if (index != genres_id.size() - 1) {
+			                queryConditions += "OR ";
+			            }
+			            index++;
+			        }
+			        queryConditions += " ) ";
+			    }
 			}
+			
 			
 			
 			index = 0;
-			if(modes_id.size() > 0) {
-				queryJoins += " JOIN games_modes ON games_modes.game_id = games.id JOIN modes ON games_modes.mode_id = modes.id ";
-				queryConditions += " AND (";
-				
-				for (int m : modes_id) {
-					queryConditions += "games_modes.mode_id = ? ";
-					if(index != modes_id.size()-1) {
-						queryConditions += "OR ";
+			if(modes_id != null) {
+				if(modes_id.size() > 0) {
+					queryJoins += " JOIN games_modes ON games_modes.game_id = games.id JOIN modes ON games_modes.mode_id = modes.id ";
+					queryConditions += " AND (";
+					
+					for (int m : modes_id) {
+						queryConditions += "games_modes.mode_id = ? ";
+						if(index != modes_id.size()-1) {
+							queryConditions += "OR ";
+						}
+						index++;
 					}
-					index++;
+					queryConditions += " ) ";
 				}
-				queryConditions += " ) ";
+			}
+			if(languages_id != null) {
+				if(languages_id.size() > 0) {
+					queryJoins += " JOIN games_languages ON games_languages.game_id = games.id JOIN languages ON games_languages.language_id = languages.id ";
+					queryConditions += " AND (";
+					index = 0;
+					for (int l : languages_id) {
+						queryConditions += "games_languages.language_id = ? ";
+						if(index != languages_id.size()-1) {
+							queryConditions += "OR ";
+						}
+						index++;
+					}
+					queryConditions += " ) ";
+				}
 			}
 			
-			
-			
-			if(languages_id.size() > 0) {
-				queryJoins += " JOIN games_languages ON games_languages.game_id = games.id JOIN languages ON games_languages.language_id = languages.id ";
-				queryConditions += " AND (";
-				index = 0;
-				for (int l : languages_id) {
-					queryConditions += "games_languages.language_id = ? ";
-					if(index != languages_id.size()-1) {
-						queryConditions += "OR ";
+			if(platforms_id != null) {
+				if(platforms_id.size() > 0) {
+					queryConditions += " AND (";
+					index = 0;
+					for (int p : platforms_id) {
+						queryConditions += "platform_id = ? ";
+						if(index != platforms_id.size()-1) {
+							queryConditions += "OR ";
+						}
+						index++;
 					}
-					index++;
+					queryConditions += ") ";
 				}
-				queryConditions += " ) ";
-			}
-			
-			
-			
-			if(platforms_id.size() > 0) {
-				queryConditions += " AND (";
-				index = 0;
-				for (int p : platforms_id) {
-					queryConditions += "platform_id = ? ";
-					if(index != platforms_id.size()-1) {
-						queryConditions += "OR ";
-					}
-					index++;
-				}
-				queryConditions += ") ";
 			}
 
-			if(developers_id.size() > 0) {
-				queryConditions += " AND (";
-				index = 0;
-				for (int d : developers_id) {
-					queryConditions += "developer_id = ? ";
-					if(index != developers_id.size()-1) {
-						queryConditions += "OR ";
+			
+			if(developers_id != null) {
+				if(developers_id.size() > 0) {
+					queryConditions += " AND (";
+					index = 0;
+					for (int d : developers_id) {
+						queryConditions += "developer_id = ? ";
+						if(index != developers_id.size()-1) {
+							queryConditions += "OR ";
+						}
+						index++;
 					}
-					index++;
+					queryConditions += " ) ";
 				}
-				queryConditions += " ) ";
 			}
+			
 			prln("queryjoins : " + queryJoins);
 			prln("queryConditions : " + queryConditions);
-
-			query += queryJoins + " WHERE stock > 0" + queryConditions + " ORDER BY games.title ASC LIMIT ?,?";			
+			query += queryJoins + " WHERE stock > 0" + queryConditions + " ORDER BY games.title ASC ";
+			
+			if(page != -1) {
+				query += " LIMIT ?,?";			
+			}
+				
 			String queryCount = "SELECT COUNT(DISTINCT games.id) AS total FROM games " + queryJoins + " WHERE stock > 0" + queryConditions;
 			
 			prln(query);
@@ -316,30 +330,46 @@ public class GameDAO {
 			PreparedStatement ps = Database.connexion.prepareStatement(query);
 			
 			index = 1;
-			
-			for (int g : genres_id) {
-				ps.setInt(index, g);
-				index++;
-			}
-			for (int m : modes_id) {
-				ps.setInt(index, m);
-				index++;
-			}
-			for (int l : languages_id) {
-				ps.setInt(index, l);
-				index++;
-			}
-			for (int p : platforms_id) {
-				ps.setInt(index, p);
-				index++;
-			}
-			for (int d : developers_id) {
-				ps.setInt(index, d);
-				index++;
+			if(genres_id != null) {
+				for (int g : genres_id) {
+					ps.setInt(index, g);
+					index++;
+				}
 			}
 			
-			ps.setInt(index, min);
-			ps.setInt(index+1, limitPerPage);
+			if(modes_id != null) {
+				for (int m : modes_id) {
+					ps.setInt(index, m);
+					index++;
+				}
+			}
+			
+			if(languages_id != null) {
+				for (int l : languages_id) {
+					ps.setInt(index, l);
+					index++;
+				}
+			}
+			
+			if(platforms_id != null) {
+				for (int p : platforms_id) {
+					ps.setInt(index, p);
+					index++;
+				}
+			}
+			
+			if(platforms_id != null) {
+				for (int d : developers_id) {
+					ps.setInt(index, d);
+					index++;
+				}
+			}
+			
+			if(page != -1) {
+				ps.setInt(index, min);
+				ps.setInt(index+1, limitPerPage);
+			}
+			
 			ResultSet resultat = ps.executeQuery();
 
 			PlatformDAO platformdao = new PlatformDAO();
