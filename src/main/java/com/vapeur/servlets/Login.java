@@ -60,17 +60,13 @@ public class Login extends HttpServlet {
 				Admin authorizedAdmin;
 				try {
 					authorizedAdmin = admindao.login(request.getParameter("email"), request.getParameter("password"));
-					if (authorizedAdmin != null) {
-						prln("login OK !");
-						// Si tout est OK création de la session
-						HttpSession session = request.getSession();
-						session.setAttribute("admin", authorizedAdmin);
-						response.sendRedirect("dashboard");
-					} else {
-						prln("login KO !");
-						doGet(request, response);
-					}
+					prln("login OK !");
+					// Si tout est OK création de la session
+					HttpSession session = request.getSession();
+					session.setAttribute("admin", authorizedAdmin);
+					response.sendRedirect("dashboard");
 				} catch (DAOException e) {
+					prln("login KO !");
 					request.setAttribute("errorMsg", e.getMessage());
 					e.printStackTrace();
 

@@ -112,7 +112,7 @@ public class AdminDAO {
 
 			if (!resultat.next()) {
 
-				throw new DAOException("Admin non trouvé dans la BDD");
+				throw new Exception("Admin non trouvé dans la BDD");
 			} else {
 				object.setId(resultat.getInt("id"));
 				object.setPassword(resultat.getString("password"));
@@ -127,14 +127,14 @@ public class AdminDAO {
 					return authorizedAdmin;
 
 				} else {
-					throw new DAOException("Le mot de passe n'est pas bon.");
+					throw new Exception("Les identifiants entrés ne sont pas bons.");
 				}
 			}
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			prln("Erreur avec la récupération de l'admin");
-			return null;
+			throw new DAOException(ex.getMessage());
 		}
 	}
 

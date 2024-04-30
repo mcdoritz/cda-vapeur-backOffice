@@ -21,7 +21,7 @@
 							<td><a href="developerDetails?id=${game.developer.id }"><span class="ml-2"><c:out value="${game.developer.name }"></c:out></span></a></td>
 							<td><span class="ml-2"><c:out value="${game.usersAvgScore }"></c:out></span></td>
 							<td><span class="ml-2"><c:out value="${game.totalReviews } "></c:out></span></td>
-							<td><a href="gameCommentsDetails?id=${game.id }"><span class="ml-2">[ <i class="fa-solid fa-eye"></i> ]</span></a></td>
+							<td><a href="commentsDetails?game_id=${game.id }"><span class="ml-2">[ <i class="fa-solid fa-eye"></i> ]</span></a></td>
 						</tr>
 
 					</c:forEach>

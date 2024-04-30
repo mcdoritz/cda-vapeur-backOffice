@@ -2,7 +2,7 @@
 	<div class="col-12">
 		<div class="card-box">
 			<h4 class="header-title">
-				<c:out value="${not empty mode ? 'Modifier un mode' : 'Ajouter un mode' }" />
+				<c:out value="${not empty mode ? 'Modifier un mode' : 'Ajouter un mode de jeu' }" />
 			</h4>
 
 			<form class="form-horizontal" method="post" action="modeDetail">

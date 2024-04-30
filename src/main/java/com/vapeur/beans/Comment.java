@@ -35,7 +35,12 @@ public class Comment implements Serializable {
     		if(content.length() > 25) {
     			this.content = content;
     		}else {
-        		throw new BeanException("L'évaluation est trop courte !");
+    			if(content.length() != 0) {
+    				throw new BeanException("L'évaluation est trop courte !");
+    			}else {
+    				this.content = content;
+    			}
+        		
         	}
     	}else {
     		throw new BeanException("L'évaluation est trop longue !");

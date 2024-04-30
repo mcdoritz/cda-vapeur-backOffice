@@ -31,7 +31,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="users?list">Lister</a></li>
-							<li><a href="users?add">Ajouter</a></li>
+							<li><a href="userDetails">Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 					
@@ -42,7 +42,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="comments?list">Lister par jeux</a></li>
-							<li><a href="comments?add">Ajouter</a></li>
+							<li><a href="commentsReport">Signalements</a></li>
 						</ul>
 					</li>
 					
@@ -52,7 +52,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="developers?list">Lister</a></li>
-							<li><a href="developers?add">Ajouter</a></li>
+							<li><a href="developerDetails">Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 					
@@ -62,7 +62,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="platforms?list">Lister</a></li>
-							<li><a href="platforms?add">Ajouter</a></li>
+							<li><a href="platformDetails">Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 					
@@ -72,7 +72,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="genres?list">Lister</a></li>
-							<li><a href="genres?add">Ajouter</a></li>
+							<li><a href="genreDetails">Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 					
@@ -82,7 +82,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="modes?list">Lister</a></li>
-							<li><a href="modes?add">Ajouter</a></li>
+							<li><a href="modeDetails">Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 					
@@ -92,7 +92,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="admins?list">Lister</a></li>
-							<li><a href="admins?add">Ajouter</a></li>
+							<li><a href="adminDetails">Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 
