@@ -143,7 +143,7 @@
 				<div class="form-group row mb-0">
                     <div class="col-sm-8 offset-sm-4">
                         <button type="submit" class="btn btn-primary waves-effect waves-light mr-1">
-                            Ajouter !
+                            <c:out value="${not empty game ? 'Modifier' : 'Ajouter' }"/>
                         </button>
                     </div>
                 </div>

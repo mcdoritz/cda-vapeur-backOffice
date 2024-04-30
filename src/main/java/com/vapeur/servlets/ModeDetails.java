@@ -4,6 +4,8 @@ import static com.vapeur.config.ConnexionVerification.checkAdmin;
 import static com.vapeur.config.Debug.prln;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,20 +14,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.vapeur.beans.User;
-import com.vapeur.dao.UserDAO;
+import com.vapeur.beans.Developer;
+import com.vapeur.beans.Game;
+import com.vapeur.beans.Mode;
+import com.vapeur.beans.Language;
+import com.vapeur.beans.Mode;
+import com.vapeur.beans.Platform;
+import com.vapeur.dao.DeveloperDAO;
+import com.vapeur.dao.GameDAO;
+import com.vapeur.dao.ModeDAO;
+import com.vapeur.dao.LanguageDAO;
+import com.vapeur.dao.ModeDAO;
+import com.vapeur.dao.PlatformDAO;
 
 /**
- * Servlet implementation class UserDetails
+ * Servlet implementation class Developers
  */
-@WebServlet("/userDetails")
-public class UserDetails extends HttpServlet {
+@WebServlet("/modeDetails")
+public class ModeDetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UserDetails() {
+    public ModeDetails() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,31 +50,31 @@ public class UserDetails extends HttpServlet {
 		
 		try {
 			if(checkAdmin(session)) {
-				prln("servlet userDetails : admin loggué");
+				prln("servlet modeDetail : admin loggué");
 			
 				
 				if(request.getParameter("id") != null && Integer.valueOf(request.getParameter("id")) > 0) {
 					
-					int user_id = Integer.valueOf(request.getParameter("id"));
-					UserDAO userdao = new UserDAO();
+					int mode_id = Integer.valueOf(request.getParameter("id"));
+					ModeDAO modedao = new ModeDAO();
 
-					User user = new User();
+					Mode mode = new Mode();
 			
 
-					user = userdao.getById(user_id);
+					mode = modedao.getById(mode_id);
 
-					if(user.getNickname() != null) {
+					if(mode.getName() != null) {
 						
-						request.setAttribute("user", user );
-						request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un user" );
+						request.setAttribute("mode", mode );
+						request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un mode" );
 					}else {
-						request.setAttribute("errorMsg", "Erreur, pas de user trouvé." );
+						request.setAttribute("errorMsg", "Erreur, pas de mode trouvé." );
 					}
 				}else {
-					request.setAttribute("pageTitle", "Vapeur.Admin : Ajout d'un user" );
+					request.setAttribute("pageTitle", "Vapeur.Admin : Ajout d'un mode" );
 				}
 
-				request.getRequestDispatcher("WEB-INF/app/userDetails.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/app/modeDetails.jsp").forward(request, response);
 			}else {
 				response.sendRedirect("login");
 			}

@@ -12,20 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.vapeur.beans.User;
-import com.vapeur.dao.UserDAO;
+import com.vapeur.beans.Admin;
+import com.vapeur.dao.AdminDAO;
 
 /**
- * Servlet implementation class UserDetails
+ * Servlet implementation class AdminDetails
  */
-@WebServlet("/userDetails")
-public class UserDetails extends HttpServlet {
+@WebServlet("/adminDetails")
+public class AdminDetails extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UserDetails() {
+    public AdminDetails() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,31 +38,41 @@ public class UserDetails extends HttpServlet {
 		
 		try {
 			if(checkAdmin(session)) {
-				prln("servlet userDetails : admin loggué");
+				prln("servlet adminDetails : admin loggué");
 			
 				
 				if(request.getParameter("id") != null && Integer.valueOf(request.getParameter("id")) > 0) {
 					
-					int user_id = Integer.valueOf(request.getParameter("id"));
-					UserDAO userdao = new UserDAO();
+					Admin currentAdmin = new Admin();
+					
+					currentAdmin = (Admin) request.getAttribute("admin");
+					
+					if(Integer.valueOf(request.getParameter("id")) == currentAdmin.getId()){
+						int admin_id = Integer.valueOf(request.getParameter("id"));
+						AdminDAO admindao = new AdminDAO();
 
-					User user = new User();
-			
+						Admin admin = new Admin();
+				
 
-					user = userdao.getById(user_id);
+						admin = admindao.getById(admin_id);
 
-					if(user.getNickname() != null) {
-						
-						request.setAttribute("user", user );
-						request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un user" );
+						if(admin.getEmail() != null) {
+							
+							request.setAttribute("admin", admin );
+							request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un admin" );
+						}else {
+							request.setAttribute("errorMsg", "Erreur, pas de admin trouvé." );
+						}
 					}else {
-						request.setAttribute("errorMsg", "Erreur, pas de user trouvé." );
+						request.setAttribute("errorMsg", "Erreur, vous ne pouvez pas modifier un autre admin." );
 					}
+					
+					
 				}else {
-					request.setAttribute("pageTitle", "Vapeur.Admin : Ajout d'un user" );
+					request.setAttribute("pageTitle", "Vapeur.Admin : Ajout d'un admin" );
 				}
 
-				request.getRequestDispatcher("WEB-INF/app/userDetails.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/app/adminDetails.jsp").forward(request, response);
 			}else {
 				response.sendRedirect("login");
 			}

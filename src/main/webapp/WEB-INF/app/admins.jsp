@@ -20,8 +20,8 @@
 							<td><span class="ml-2"><c:out value="${admin.firstname }"></c:out></span></td>
 							<td><span class="ml-2"><c:out value="${admin.lastname }"></c:out></span></td>
 							<td><span class="ml-2"><c:out value="${admin.active }"></c:out></span></td>
-							<td><a href="userDetails?id=${user.id }"><span class="ml-2">[ <i class="fa-solid fa-pen"></i> ]</span></a></td>
-							<td><a href="userDelete?id=${user.id }"><span class="ml-2">[ <i class="fa-solid fa-box-archive"></i> / <i class="fa-solid fa-trash-can"></i> ]</span></a></td>
+							<td><c:if test="${admin.id == sessionScope.admin.id }" ><a href="adminDetails?id=${admin.id }"><span class="ml-2">[ <i class="fa-solid fa-pen"></i> ]</span></a></c:if></td>
+							<td><c:if test="${admin.id == sessionScope.admin.id }" ><a href="adminDelete?id=${admin.id }"><span class="ml-2">[ <i class="fa-solid fa-box-archive"></i> / <i class="fa-solid fa-trash-can"></i> ]</span></a></c:if></td>
 						</tr>
 
 

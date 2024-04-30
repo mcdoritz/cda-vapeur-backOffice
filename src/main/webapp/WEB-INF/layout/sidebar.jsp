@@ -47,6 +47,46 @@
 					</li>
 					
 					<li><a href="javascript: void(0);"> <i
+							class="dripicons-anchor"></i> <span> Développeurs </span><span
+							class="menu-arrow"></span>
+					</a>
+						<ul class="nav-second-level mm-collapse" aria-expanded="false">
+							<li><a href="developers?list">Lister</a></li>
+							<li><a href="developers?add">Ajouter</a></li>
+						</ul>
+					</li>
+					
+					<li><a href="javascript: void(0);"> <i
+							class="dripicons-anchor"></i> <span> Plateformes </span><span
+							class="menu-arrow"></span>
+					</a>
+						<ul class="nav-second-level mm-collapse" aria-expanded="false">
+							<li><a href="platforms?list">Lister</a></li>
+							<li><a href="platforms?add">Ajouter</a></li>
+						</ul>
+					</li>
+					
+					<li><a href="javascript: void(0);"> <i
+							class="dripicons-anchor"></i> <span> Genres </span><span
+							class="menu-arrow"></span>
+					</a>
+						<ul class="nav-second-level mm-collapse" aria-expanded="false">
+							<li><a href="genres?list">Lister</a></li>
+							<li><a href="genres?add">Ajouter</a></li>
+						</ul>
+					</li>
+					
+					<li><a href="javascript: void(0);"> <i
+							class="dripicons-anchor"></i> <span> Modes de jeu </span><span
+							class="menu-arrow"></span>
+					</a>
+						<ul class="nav-second-level mm-collapse" aria-expanded="false">
+							<li><a href="modes?list">Lister</a></li>
+							<li><a href="modes?add">Ajouter</a></li>
+						</ul>
+					</li>
+					
+					<li><a href="javascript: void(0);"> <i
 							class="dripicons-briefcase"></i> <span> Admins </span> <span
 							class="menu-arrow"></span>
 					</a>

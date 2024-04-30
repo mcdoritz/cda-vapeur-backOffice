@@ -4,6 +4,7 @@ import static com.vapeur.config.ConnexionVerification.checkAdmin;
 import static com.vapeur.config.Debug.prln;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,20 +13,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.vapeur.beans.User;
-import com.vapeur.dao.UserDAO;
+import com.vapeur.beans.Developer;
+import com.vapeur.beans.Genre;
+import com.vapeur.dao.GenreDAO;
 
 /**
- * Servlet implementation class UserDetails
+ * Servlet implementation class Developers
  */
-@WebServlet("/userDetails")
-public class UserDetails extends HttpServlet {
+@WebServlet("/genres")
+public class Genres extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UserDetails() {
+    public Genres() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,31 +40,18 @@ public class UserDetails extends HttpServlet {
 		
 		try {
 			if(checkAdmin(session)) {
-				prln("servlet userDetails : admin loggué");
-			
+				prln("servlet genres : admin loggué");
+				GenreDAO genredao = new GenreDAO();
 				
-				if(request.getParameter("id") != null && Integer.valueOf(request.getParameter("id")) > 0) {
-					
-					int user_id = Integer.valueOf(request.getParameter("id"));
-					UserDAO userdao = new UserDAO();
-
-					User user = new User();
-			
-
-					user = userdao.getById(user_id);
-
-					if(user.getNickname() != null) {
-						
-						request.setAttribute("user", user );
-						request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un user" );
-					}else {
-						request.setAttribute("errorMsg", "Erreur, pas de user trouvé." );
-					}
-				}else {
-					request.setAttribute("pageTitle", "Vapeur.Admin : Ajout d'un user" );
-				}
-
-				request.getRequestDispatcher("WEB-INF/app/userDetails.jsp").forward(request, response);
+				ArrayList<Genre> genresList = new ArrayList<>(genredao.readAll());
+				
+				request.setAttribute("table", "genres");
+				request.setAttribute("genresList", genresList);
+				
+				
+				// ----------------------
+				request.setAttribute("pageTitle", "Vapeur.Admin : Genres" );
+				request.getRequestDispatcher("WEB-INF/app/genres.jsp").forward(request, response);
 			}else {
 				response.sendRedirect("login");
 			}
