@@ -22,7 +22,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="games?list">Lister</a></li>
-							<li><a href="games?add">Ajouter</a></li>
+							<li><a href="gameDetails">Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 					<li><a href="javascript: void(0);"> <i

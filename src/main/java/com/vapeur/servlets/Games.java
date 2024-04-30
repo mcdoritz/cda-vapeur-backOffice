@@ -40,16 +40,12 @@ public class Games extends HttpServlet {
 
 				GameDAO gamedao = new GameDAO();
 				
-				if(request.getParameter("add") == null) {
-					GameResults gameresults = gamedao.adminReadAll();
-					
-					request.setAttribute("table", "games");
-					request.setAttribute("totalGames", gameresults.getTotalResults());
-					request.setAttribute("gamesList", gameresults.getGames());
-					request.setAttribute("pageTitle", "Vapeur.Admin : Jeux" );
-				}else {
-					request.setAttribute("addGame", true);
-				}
+				GameResults gameresults = gamedao.adminReadAll();
+				
+				request.setAttribute("table", "games");
+				request.setAttribute("totalGames", gameresults.getTotalResults());
+				request.setAttribute("gamesList", gameresults.getGames());
+				request.setAttribute("pageTitle", "Vapeur.Admin : Jeux" );
 
 				request.getRequestDispatcher("WEB-INF/app/games.jsp").forward(request, response);
 			}else {

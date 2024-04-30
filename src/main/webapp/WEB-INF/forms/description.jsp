@@ -3,12 +3,7 @@
 		<div class="card-box">
 			<h4 class="header-title">Description du jeu</h4>
 			<div id="summernote-editor" style="display: none;">
-				<h6>This is an simple editable area.</h6>
-				<ul>
-					<li>Select a text to reveal the toolbar.</li>
-					<li>Edit rich document on-the-fly, so elastic!</li>
-				</ul>
-				<p>End of simple area</p>
+				<c:out value="${game.description }"/>
 			</div>
 			<div class="note-editor note-frame card">
 				<div class="note-dropzone">
@@ -1076,12 +1071,7 @@
 					<textarea class="note-codable" role="textbox" aria-multiline="true"></textarea>
 					<div class="note-editable card-block" contenteditable="true"
 						role="textbox" aria-multiline="true" style="height: 250px;">
-						<h6>This is an simple editable area.</h6>
-						<ul>
-							<li>Select a text to reveal the toolbar.</li>
-							<li>Edit rich document on-the-fly, so elastic!</li>
-						</ul>
-						<p>End of simple area</p>
+						<c:out value="${game.description }"/>
 					</div>
 				</div>
 				<output class="note-status-output" aria-live="polite"></output>
