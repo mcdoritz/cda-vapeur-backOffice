@@ -37,12 +37,11 @@
 					
 					<li><a href="javascript: void(0);"> <i
 							class="dripicons-anchor"></i> <span> Commentaires </span> <span
-							class="badge badge-danger float-right">6</span> <span>
-								Forms </span><span
+							class="badge badge-danger float-right">6</span><span
 							class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="comments?list">Lister</a></li>
+							<li><a href="comments?list">Lister par jeux</a></li>
 							<li><a href="comments?add">Ajouter</a></li>
 						</ul>
 					</li>

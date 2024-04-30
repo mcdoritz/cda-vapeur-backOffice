@@ -30,9 +30,6 @@ public class Games extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession(false);
@@ -40,15 +37,20 @@ public class Games extends HttpServlet {
 		try {
 			if(checkAdmin(session)) {
 				prln("servlet games : admin loggué");
+
 				GameDAO gamedao = new GameDAO();
 				
-				GameResults gameresults = gamedao.readAll(-1, null, null, null, null, null);
-				
-				request.setAttribute("table", "games");
-				request.setAttribute("totalGames", gameresults.getTotalResults());
-				request.setAttribute("gamesList", gameresults.getGames());
-				request.setAttribute("pageTitle", "Vapeur.Admin : Jeux" );
-				
+				if(request.getParameter("add") == null) {
+					GameResults gameresults = gamedao.adminReadAll();
+					
+					request.setAttribute("table", "games");
+					request.setAttribute("totalGames", gameresults.getTotalResults());
+					request.setAttribute("gamesList", gameresults.getGames());
+					request.setAttribute("pageTitle", "Vapeur.Admin : Jeux" );
+				}else {
+					request.setAttribute("addGame", true);
+				}
+
 				request.getRequestDispatcher("WEB-INF/app/games.jsp").forward(request, response);
 			}else {
 				response.sendRedirect("login");

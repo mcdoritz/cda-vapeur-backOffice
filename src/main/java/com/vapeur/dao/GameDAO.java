@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.vapeur.beans.Comment;
+import com.vapeur.beans.Developer;
 import com.vapeur.beans.Game;
 import com.vapeur.beans.GameResults;
 import com.vapeur.beans.Genre;
@@ -246,9 +247,7 @@ public class GameDAO {
 			        queryConditions += " ) ";
 			    }
 			}
-			
-			
-			
+
 			index = 0;
 			if(modes_id != null) {
 				if(modes_id.size() > 0) {
@@ -295,7 +294,6 @@ public class GameDAO {
 					queryConditions += ") ";
 				}
 			}
-
 			
 			if(developers_id != null) {
 				if(developers_id.size() > 0) {
@@ -407,6 +405,44 @@ public class GameDAO {
 			return null;
 		}
 	}
+	
+	// Sers à lister les jeux, inutile de tout prendre donc.
+		public GameResults adminReadAll() {
+			
+			try {
+			ArrayList<Game> gamesList = new ArrayList<>();
+			
+			PreparedStatement ps = Database.connexion.prepareStatement("SELECT DISTINCT games.id, title, price, release_date, users_avg_score, total_reviews, stock, developer_id, platform_id FROM games");
+				
+			ResultSet resultat = ps.executeQuery();
+
+			PlatformDAO platformdao = new PlatformDAO();
+			DeveloperDAO developerdao = new DeveloperDAO();
+
+			while (resultat.next()) {
+				Game object = new Game();
+				object.setId(resultat.getInt("id"));
+				object.setTitle(resultat.getString("title"));
+				object.setPrice(resultat.getFloat("price"));
+				object.setReleaseDate(resultat.getDate("release_date"));
+				object.setUsersAvgScore(resultat.getFloat("users_avg_score"));
+				object.setTotalReviews(resultat.getInt("total_reviews"));
+				object.setStock(resultat.getInt("stock"));
+				object.setPlatform(platformdao.getById(resultat.getInt("platform_id")));
+				object.setDeveloper(developerdao.getById(resultat.getInt("developer_id")));
+				gamesList.add(object);
+			}
+
+				GameResults gameresults = new GameResults(gamesList, gamesList.size());
+				prln("gr:" + gameresults.getGames().size());
+				prln("gr:" + gameresults.getTotalResults());
+				return gameresults;
+			} catch (Exception ex) {
+				bddSays("readAll", false, 0, null);
+				ex.printStackTrace();
+				return null;
+			}
+		}
 	
 	public ArrayList<Game> readSuggestions(ArrayList<Integer> gamesNotToShow, ArrayList<Integer> genres_id, ArrayList<Integer> modes_id) {
 		ArrayList<Game> gamesList = new ArrayList<>();

@@ -35,8 +35,27 @@
         
         </c:if>
         
+        <!--Summernote js-->
+        <script src="assets/libs/summernote/summernote-bs4.min.js"></script>
+        
+         <!-- select2 js -->
+        <script src="assets/libs/select2/select2.min.js"></script>
+        <script src="assets/libs/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+        <script src="assets/libs/switchery/switchery.min.js"></script>
+        <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+        
+         <!-- Mask input -->
+        <script src="assets/libs/jquery-mask-plugin/jquery.mask.min.js"></script>
+        
+        <!-- Bootstrap Select -->
+        <script src="assets/libs/bootstrap-select/bootstrap-select.min.js"></script>
+        
         <!-- App js -->
         <script src="assets/js/app.min.js"></script>
+        
+        <!-- Init js-->
+        <script src="assets/js/pages/form-advanced.init.js"></script>
+        
 	
 	</body>
 </html>

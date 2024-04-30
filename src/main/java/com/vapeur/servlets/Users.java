@@ -4,12 +4,18 @@ import static com.vapeur.config.ConnexionVerification.checkAdmin;
 import static com.vapeur.config.Debug.prln;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.vapeur.beans.User;
+import com.vapeur.dao.UserDAO;
 
 /**
  * Servlet implementation class Users
@@ -36,8 +42,14 @@ public class Users extends HttpServlet {
 			if(checkAdmin(session)) {
 				prln("servlet users : admin loggué");
 				
+				UserDAO userdao = new UserDAO();
+				
+				List<User> users = userdao.readAll("");
+				
 				
 				// ----------------------
+				request.setAttribute("table", "users");
+				request.setAttribute("usersList", users);
 				request.setAttribute("pageTitle", "Vapeur.Admin : Utilisateurs" );
 				request.getRequestDispatcher("WEB-INF/app/users.jsp").forward(request, response);
 			}else {
