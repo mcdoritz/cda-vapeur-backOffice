@@ -27,6 +27,8 @@ import com.vapeur.dao.LanguageDAO;
 import com.vapeur.dao.ModeDAO;
 import com.vapeur.dao.PlatformDAO;
 
+import com.vapeur.config.MajCommentsToApprove;
+
 /**
  * Servlet implementation class Developers
  */
@@ -46,8 +48,9 @@ public class DeveloperDetails extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-HttpSession session = request.getSession(false);
-		
+		HttpSession session = request.getSession(false);
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+
 		try {
 			if(checkAdmin(session)) {
 				prln("servlet developerDetail : admin loggué");
@@ -90,7 +93,7 @@ HttpSession session = request.getSession(false);
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
 		doGet(request, response);
 	}
 

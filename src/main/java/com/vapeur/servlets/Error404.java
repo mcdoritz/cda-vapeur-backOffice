@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import static com.vapeur.config.Debug.*;
 
+import com.vapeur.config.MajCommentsToApprove;
+
 @WebServlet("/404")
 public class Error404 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -21,7 +23,8 @@ public class Error404 extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+
 		prln("Servlet erreur 404");
 		request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");

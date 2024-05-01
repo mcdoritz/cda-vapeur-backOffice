@@ -29,6 +29,7 @@ public class Game implements Serializable {
     private ArrayList<Language> languages;
     private ArrayList<Comment> comments;
     private Comment comment; //Pour affichage du commentaire d'un joueur en particulier
+    private int notApprovedComments; //Comptage des commentaires non approuvés.
 
     // Constructeurs
     public Game() {
@@ -74,7 +75,7 @@ public class Game implements Serializable {
     //Complet pour page détail (moins Comment d'un seul joueur)
     public Game(int id, String title, String description, int classification, float price, Date releaseDate, float usersAvgScore, 
     		int totalReviews, boolean controllerSupport, boolean requires3rdPartyAccount, int stock, ArrayList<String> tags, int developerId, Developer developer,
-    		ArrayList<Genre> genres, ArrayList<Mode> modes, int platformId, Platform platform, ArrayList<Video> videos, ArrayList<Language> languages, ArrayList<Comment> comments) {
+    		ArrayList<Genre> genres, ArrayList<Mode> modes, int platformId, Platform platform, ArrayList<Video> videos, ArrayList<Language> languages, ArrayList<Comment> comments, int notApprovedComments) {
     	
         setId(id);
         setTitle(title);
@@ -97,6 +98,7 @@ public class Game implements Serializable {
         setVideos(videos);
         setLanguages(languages);
         setComments(comments);
+        setNotApprovedComments(notApprovedComments);
     }
 
     // Getters et setters
@@ -276,6 +278,14 @@ public class Game implements Serializable {
 
 	public void setComment(Comment comment) {
 		this.comment = comment;
+	}
+
+	public int getNotApprovedComments() {
+		return notApprovedComments;
+	}
+
+	public void setNotApprovedComments(int notApprovedComments) {
+		this.notApprovedComments = notApprovedComments;
 	}
 
 	@Override

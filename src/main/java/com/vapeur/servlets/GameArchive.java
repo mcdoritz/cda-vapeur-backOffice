@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 import com.vapeur.beans.User;
 import com.vapeur.config.Database;
 
+import com.vapeur.config.MajCommentsToApprove;
+
 /**
  * Servlet implementation class GameDelete
  */
@@ -27,7 +29,8 @@ public class GameArchive extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+
 		if(session != null) {
 			if(session.getAttribute("user") != null) {
 				User user = (User) session.getAttribute("user");
@@ -52,7 +55,7 @@ public class GameArchive extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
 		doGet(request, response);
 	}
 

@@ -39,7 +39,7 @@
 
 						<div class="row mt-3">
 							<div class="col-12 text-center">
-								<p class="text-muted mb-0"><%@ include file="../error/message.jsp"%>
+								<p class="text-muted mb-0"><%@ include file="../info/error.jsp"%>
 								</p>
 							</div>
 							<!-- end col -->

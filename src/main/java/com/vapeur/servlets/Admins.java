@@ -1,6 +1,7 @@
 package com.vapeur.servlets;
 
 import static com.vapeur.config.ConnexionVerification.checkAdmin;
+import com.vapeur.config.MajCommentsToApprove;
 import static com.vapeur.config.Debug.prln;
 
 import java.io.IOException;
@@ -37,8 +38,9 @@ public class Admins extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-HttpSession session = request.getSession(false);
-		
+		HttpSession session = request.getSession(false);
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+
 		try {
 			if(checkAdmin(session)) {
 				prln("servlet admins : admin loggué");
@@ -67,7 +69,7 @@ HttpSession session = request.getSession(false);
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
 		
 	}
 

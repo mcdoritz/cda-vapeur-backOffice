@@ -1,6 +1,8 @@
 package com.vapeur.servlets;
 
 import static com.vapeur.config.ConnexionVerification.checkAdmin;
+
+import com.vapeur.config.MajCommentsToApprove;
 import static com.vapeur.config.Debug.prln;
 
 import java.io.IOException;
@@ -15,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import com.vapeur.beans.GameResults;
 import com.vapeur.dao.CommentDAO;
 import com.vapeur.dao.GameDAO;
-
+import com.vapeur.config.MajCommentsToApprove;
 /**
  * Servlet implementation class Comments
  */
@@ -36,7 +38,8 @@ public class Comments extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+
 		try {
 			if(checkAdmin(session)) {
 				prln("servlet comments : admin loggué");
@@ -44,7 +47,7 @@ public class Comments extends HttpServlet {
 				
 				GameResults gameresults = gamedao.adminReadAll();
 				
-				request.setAttribute("table", "games");
+				request.setAttribute("table", "gamesComments");
 				request.setAttribute("totalGames", gameresults.getTotalResults());
 				request.setAttribute("gamesList", gameresults.getGames());
 				
@@ -67,7 +70,7 @@ public class Comments extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
 		doGet(request, response);
 	}
 

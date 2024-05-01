@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.vapeur.beans.Comment;
-import com.vapeur.beans.Developer;
 import com.vapeur.beans.Game;
 import com.vapeur.beans.GameResults;
 import com.vapeur.beans.Genre;
@@ -196,7 +195,7 @@ public class GameDAO {
 				object.setGenres(genresList);
 				object.setLanguages(languagesList);
 				object.setDeveloper(developerdao.getById(resultat.getInt("developer_id")));
-				object.setComments(commentdao.getByGameIdOnlyWithContent(game_id));
+				object.setComments(commentdao.getByGameIdOnlyWithContent(game_id, true));
 
 			}
 			String objectInfos = object.getTitle();
@@ -247,7 +246,9 @@ public class GameDAO {
 			        queryConditions += " ) ";
 			    }
 			}
-
+			
+			
+			
 			index = 0;
 			if(modes_id != null) {
 				if(modes_id.size() > 0) {
@@ -294,6 +295,7 @@ public class GameDAO {
 					queryConditions += ") ";
 				}
 			}
+
 			
 			if(developers_id != null) {
 				if(developers_id.size() > 0) {
@@ -407,42 +409,45 @@ public class GameDAO {
 	}
 	
 	// Sers à lister les jeux, inutile de tout prendre donc.
-		public GameResults adminReadAll() {
-			
-			try {
-			ArrayList<Game> gamesList = new ArrayList<>();
-			
-			PreparedStatement ps = Database.connexion.prepareStatement("SELECT DISTINCT games.id, title, price, release_date, users_avg_score, total_reviews, stock, developer_id, platform_id FROM games");
+			public GameResults adminReadAll() {
 				
-			ResultSet resultat = ps.executeQuery();
+				try {
+				ArrayList<Game> gamesList = new ArrayList<>();
+				
+				PreparedStatement ps = Database.connexion.prepareStatement("SELECT DISTINCT games.id, title, price, release_date, users_avg_score, total_reviews, stock, developer_id, platform_id FROM games");
+					
+				ResultSet resultat = ps.executeQuery();
 
-			PlatformDAO platformdao = new PlatformDAO();
-			DeveloperDAO developerdao = new DeveloperDAO();
+				PlatformDAO platformdao = new PlatformDAO();
+				DeveloperDAO developerdao = new DeveloperDAO();
+				CommentDAO commentdao = new CommentDAO();
 
-			while (resultat.next()) {
-				Game object = new Game();
-				object.setId(resultat.getInt("id"));
-				object.setTitle(resultat.getString("title"));
-				object.setPrice(resultat.getFloat("price"));
-				object.setReleaseDate(resultat.getDate("release_date"));
-				object.setUsersAvgScore(resultat.getFloat("users_avg_score"));
-				object.setTotalReviews(resultat.getInt("total_reviews"));
-				object.setStock(resultat.getInt("stock"));
-				object.setPlatform(platformdao.getById(resultat.getInt("platform_id")));
-				object.setDeveloper(developerdao.getById(resultat.getInt("developer_id")));
-				gamesList.add(object);
+				while (resultat.next()) {
+					Game object = new Game();
+					int game_id = resultat.getInt("id");
+					object.setId(resultat.getInt("id"));
+					object.setTitle(resultat.getString("title"));
+					object.setPrice(resultat.getFloat("price"));
+					object.setReleaseDate(resultat.getDate("release_date"));
+					object.setUsersAvgScore(resultat.getFloat("users_avg_score"));
+					object.setTotalReviews(resultat.getInt("total_reviews"));
+					object.setStock(resultat.getInt("stock"));
+					object.setPlatform(platformdao.getById(resultat.getInt("platform_id")));
+					object.setDeveloper(developerdao.getById(resultat.getInt("developer_id")));
+					object.setNotApprovedComments(commentdao.countNotApprovedCommentsById(game_id));
+					gamesList.add(object);
+				}
+
+					GameResults gameresults = new GameResults(gamesList, gamesList.size());
+					prln("gr:" + gameresults.getGames().size());
+					prln("gr:" + gameresults.getTotalResults());
+					return gameresults;
+				} catch (Exception ex) {
+					bddSays("readAll", false, 0, null);
+					ex.printStackTrace();
+					return null;
+				}
 			}
-
-				GameResults gameresults = new GameResults(gamesList, gamesList.size());
-				prln("gr:" + gameresults.getGames().size());
-				prln("gr:" + gameresults.getTotalResults());
-				return gameresults;
-			} catch (Exception ex) {
-				bddSays("readAll", false, 0, null);
-				ex.printStackTrace();
-				return null;
-			}
-		}
 	
 	public ArrayList<Game> readSuggestions(ArrayList<Integer> gamesNotToShow, ArrayList<Integer> genres_id, ArrayList<Integer> modes_id) {
 		ArrayList<Game> gamesList = new ArrayList<>();
@@ -833,12 +838,14 @@ public class GameDAO {
 	public void update(int game_id) {
 		prln("update scores of game_id : " + game_id);
 		try {
-			PreparedStatement ps = Database.connexion.prepareStatement("UPDATE games SET total_reviews = ( SELECT COUNT(comments.game_id) FROM comments WHERE comments.game_id = ?);");
+			PreparedStatement ps = Database.connexion.prepareStatement("UPDATE games SET total_reviews = ( SELECT COUNT(comments.game_id) FROM comments WHERE comments.game_id = ?) WHERE games.id = ?;");
 			ps.setInt(1, game_id);
+			ps.setInt(2, game_id);
 			ps.executeUpdate();
 			
-			PreparedStatement ps1 = Database.connexion.prepareStatement("UPDATE games SET users_avg_score = (SELECT ROUND(AVG(comments.score),2) FROM comments WHERE comments.game_id = ?);");
+			PreparedStatement ps1 = Database.connexion.prepareStatement("UPDATE games SET users_avg_score = (SELECT ROUND(AVG(comments.score),2) FROM comments WHERE comments.game_id = ?) WHERE games.id = ?;");
 			ps1.setInt(1, game_id);
+			ps1.setInt(2, game_id);
 			ps1.executeUpdate();
 			
 			bddSays("update", true, game_id, null);

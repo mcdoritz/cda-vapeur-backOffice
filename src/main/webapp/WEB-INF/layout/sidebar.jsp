@@ -36,9 +36,8 @@
 					</li>
 					
 					<li><a href="javascript: void(0);"> <i
-							class="dripicons-anchor"></i> <span> Commentaires </span> <span
-							class="badge badge-danger float-right">6</span><span
-							class="menu-arrow"></span>
+							class="dripicons-anchor"></i> <span> Commentaires </span> <span class="badge badge-danger float-center" style="${notifs > 0 ? '' : 'background-color:green!important'}"><c:out value="${notifs } "></c:out></span>
+						<span class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="comments?list">Lister par jeux</a></li>
@@ -47,8 +46,8 @@
 					</li>
 					
 					<li><a href="javascript: void(0);"> <i
-							class="dripicons-anchor"></i> <span> Développeurs </span><span
-							class="menu-arrow"></span>
+							class="dripicons-anchor"></i> <span> Développeurs </span>
+							<span class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="developers?list">Lister</a></li>

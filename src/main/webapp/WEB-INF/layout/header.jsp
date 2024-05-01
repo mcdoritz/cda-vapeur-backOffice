@@ -176,7 +176,10 @@
 						<div class="page-title-box">
 							<h4 class="page-title"><c:out value="${pageTitle }"/></h4>
 							<c:if test="${errorMsg != null }">
-								<%@ include file="../error/message.jsp"%>
+								<%@ include file="../info/error.jsp"%>
+							</c:if>
+							<c:if test="${infoMsg != null }">
+								<%@ include file="../info/info.jsp"%>
 							</c:if>
 						</div>
 					</div>

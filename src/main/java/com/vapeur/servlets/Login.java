@@ -18,6 +18,8 @@ import com.vapeur.dao.AdminDAO;
 import com.vapeur.dao.DAOException;
 import com.vapeur.dao.UserDAO;
 
+import com.vapeur.config.MajCommentsToApprove;
+
 /**
  * Servlet implementation class Login
  */
@@ -32,6 +34,8 @@ public class Login extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+
 		try {
 			if(checkAdmin(session)) {
 				prln("login : admin loggué");
@@ -50,7 +54,7 @@ public class Login extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
 		// Vérification que les champs sont pas null AJOUTER VERIFICATION VALIDATION
 		if (request.getParameter("email") != null && request.getParameter("password") != null) {
 			prln("Formulaire login OK !");

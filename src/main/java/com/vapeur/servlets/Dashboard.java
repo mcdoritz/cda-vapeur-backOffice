@@ -1,6 +1,7 @@
 package com.vapeur.servlets;
 
 import static com.vapeur.config.Debug.prln;
+
 import static com.vapeur.config.ConnexionVerification.*;
 
 import java.io.IOException;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpSession;
 import com.vapeur.config.Database;
 import com.vapeur.config.DatabaseException;
 import com.vapeur.dao.GameDAO;
+import com.vapeur.config.MajCommentsToApprove;
+
 
 @WebServlet(urlPatterns = { "/", "/dashboard" })
 public class Dashboard extends HttpServlet {
@@ -30,6 +33,8 @@ public class Dashboard extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+
 		// Vérif 404 -------------
 		String requestURI = request.getRequestURI();
 		prln(requestURI);
@@ -64,7 +69,7 @@ public class Dashboard extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
 		doGet(request, response);
 	}
 
