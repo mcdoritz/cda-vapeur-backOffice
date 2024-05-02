@@ -4,6 +4,8 @@
 			<h4 class="header-title"><c:out value="${not empty game ? 'Modifier un jeu' : 'Ajouter un jeu' }"/> </h4>
 
 			<form class="form-horizontal" method="post" action="gameDetails">
+				<input type="hidden" class="form-control" id="simpleinput" value="${game.id }"
+							name="game_id" required>
 				<div class="form-group row">
 					<label class="col-sm-2 col-form-label" for="simpleinput">Titre</label>
 					<div class="col-sm-10">
@@ -12,7 +14,12 @@
 					</div>
 				</div>
 
-				<%@ include file="../forms/description.jsp"%>
+				<div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="example-textarea">Description</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="example-textarea" rows="5" name="description"/><c:out value="${game.description }"/></textarea>
+                    </div>
+                </div>
 
 				<div class="form-group row">
 					<label class="col-sm-2 col-form-label">Classification</label>
@@ -44,24 +51,25 @@
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-sm-2 col-form-label" for="controller-support">Support de la manette</label>
-					<input type="checkbox" data-plugin="switchery"
-						data-color="#9261c6" style="display: none;" data-switchery="true"
-						id="controller-support"
-						name="controller-support" <c:out value="${game.controllerSupport == true ? 'checked' : '' }"/> >
+					<div class="custom-control custom-checkbox">
+						<label class="custom-control-label" for="controller-support">Support de la manette ?</label>
+	                    <input type="checkbox" class="custom-control-input" id="controller-support" name="controller-support" <c:out value="${game.controllerSupport == true ? 'checked' : '' }"/>>
+	                    
+	                </div>
 				</div>
+
 				<div class="form-group row">
-					<label class="col-sm-2 col-form-label" for="requires-3rd-party-account">Nécessité de créer un compte chez le développeur</label>
-					<input type="checkbox" data-plugin="switchery"
-						data-color="#9261c6" style="display: none;" data-switchery="true"
-						id="requires-3rd-party-account"
-						name="requires-3rd-party-account" <c:out value="${game.requires3rdPartyAccount == true ? 'checked' : '' }"/>>
+					<div class="custom-control custom-checkbox">
+						<label class="custom-control-label" for="requires-3rd-party-account">Nécessité de créer un compte chez le développeur ?</label>
+	                    <input type="checkbox" class="custom-control-input" id="requires-3rd-party-account" name="requires-3rd-party-account" <c:out value="${game.requires3rdPartyAccount == true ? 'checked' : '' }"/>>
+	                    
+	                </div>
 				</div>
 				<div class="form-group row">
 					<label class="col-sm-2 col-form-label" for="example-number">Stock</label>
 					<div class="col-sm-10">
 						<input class="form-control" type="number" id="example-number"
-							name="number" min="0" value="${game.stock }">
+							name="stock" min="0" value="${game.stock }">
 					</div>
 				</div>
 
@@ -140,6 +148,14 @@
 						</select>
 					</div>
 				</div>
+				<div class="form-group row">
+					<div class="custom-control custom-checkbox">
+						<label for="archived">Archiver ?</label>
+	                    <input type="checkbox" id="archived" name="archived" <c:out value="${game.archived == true ? 'checked' : '' }"/>>
+	                    
+	                </div>
+				</div>
+
 				<div class="form-group row mb-0">
                     <div class="col-sm-8 offset-sm-4">
                         <button type="submit" class="btn btn-primary waves-effect waves-light mr-1">

@@ -43,11 +43,33 @@ public class Games extends HttpServlet {
 
 				GameDAO gamedao = new GameDAO();
 				
-				GameResults gameresults = gamedao.adminReadAll();
+				if(request.getParameter("list") != null) {
+					prln("jeux en ventes");
+					GameResults gameresults = gamedao.adminReadAll(false);
+					if(gameresults.getTotalResults() != 0) {
+						request.setAttribute("totalGames", gameresults.getTotalResults());
+						request.setAttribute("gamesList", gameresults.getGames());
+					}else {
+						request.setAttribute("infoMsg", "Aucun jeu trouvé");
+					}
+				}else if (request.getParameter("archived") != null) {
+					prln("jeux archivés");
+					GameResults gameresults = gamedao.adminReadAll(true);
+					if(gameresults.getTotalResults() != 0) {
+						request.setAttribute("totalGames", gameresults.getTotalResults());
+						request.setAttribute("gamesList", gameresults.getGames());
+					}else {
+						request.setAttribute("infoMsg", "Aucun jeu trouvé");
+					}
+					
+				}else {
+					request.setAttribute("errorMsg", "Erreur avec l'URL");
+				}
+				
+				
 				
 				request.setAttribute("table", "games");
-				request.setAttribute("totalGames", gameresults.getTotalResults());
-				request.setAttribute("gamesList", gameresults.getGames());
+				
 				request.setAttribute("pageTitle", "Vapeur.Admin : Jeux" );
 
 				request.getRequestDispatcher("WEB-INF/app/games.jsp").forward(request, response);

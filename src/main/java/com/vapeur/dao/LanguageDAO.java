@@ -7,8 +7,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vapeur.beans.GameLanguage;
 import com.vapeur.beans.Genre;
 import com.vapeur.beans.Language;
+import com.vapeur.beans.Mode;
 import com.vapeur.config.Database;
 
 import static com.vapeur.config.Debug.*;
@@ -49,6 +51,51 @@ public class LanguageDAO {
                     }
                 }
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void updateLinksBetweenGameAndLanguages(int game_id, ArrayList<GameLanguage> gameLanguages) {
+        try {
+        	PreparedStatement ps1 = Database.connexion.prepareStatement("DELETE FROM games_languages WHERE game_id = ?");
+            ps1.setInt(1, game_id);
+            
+            
+            String query = "INSERT INTO games_languages (game_id, language_id, interface, full_audio, subtitles) VALUES ";
+            int index = 0;
+            ArrayList<Integer> languages_id = new ArrayList<>();
+            for(GameLanguage gl:gameLanguages) {
+            	query += "(?, ?, ?, ?, ?), ";
+            	index += 5;
+            	languages_id.add(gl.getLanguageId());
+            }
+            
+            query = query.substring(0, query.length()-2) + ";";
+            prln(query);
+            
+            PreparedStatement ps2 = Database.connexion.prepareStatement(query);
+            int j = 0;
+            for(int i = 1; i <= index; i+=5) {
+            	ps2.setInt(i, game_id);
+            	ps2.setInt(i+1, languages_id.get(j) );
+            	ps2.setBoolean(i+2, gameLanguages.get(j).isInterfaceSupport());
+            	ps2.setBoolean(i+3, gameLanguages.get(j).isFullAudioSupport());
+            	ps2.setBoolean(i+4, gameLanguages.get(j).isSubtitles());
+            	j++;
+            }
+            
+            
+            
+            try {
+            	ps1.executeUpdate();
+                ps2.executeUpdate();
+            } catch (Exception ex) {
+            	ex.printStackTrace();
+            }
+            
+            
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }

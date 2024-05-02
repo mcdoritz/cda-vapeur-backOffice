@@ -52,6 +52,47 @@ public class GenreDAO {
             ex.printStackTrace();
         }
     }
+    
+    public void updateLinksBetweenGameAndGenres(int game_id, ArrayList<Genre> genres) {
+        try {
+        	PreparedStatement ps1 = Database.connexion.prepareStatement("DELETE FROM games_genres WHERE game_id = ?");
+            ps1.setInt(1, game_id);
+            
+            
+            String query = "INSERT INTO games_genres (game_id, genre_id) VALUES ";
+            int index = 0;
+            ArrayList<Integer> genres_id = new ArrayList<>();
+            for(Genre g:genres) {
+            	query += "(?, ?), ";
+            	index += 2;
+            	genres_id.add(g.getId());
+            }
+            
+            query = query.substring(0, query.length()-2) + ";";
+            
+            PreparedStatement ps2 = Database.connexion.prepareStatement(query);
+            int j = 0;
+            for(int i = 1; i <= index; i+=2) {
+            	ps2.setInt(i, game_id);
+            	ps2.setInt(i+1, genres_id.get(j) );
+            	j++;
+            }
+            
+            prln(query);
+            
+            try {
+            	ps1.executeUpdate();
+                ps2.executeUpdate();
+            } catch (Exception ex) {
+            	ex.printStackTrace();
+            }
+            
+            
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public Genre getById(int genre_id) {
         try {

@@ -21,7 +21,8 @@
 							class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="games?list">Lister</a></li>
+							<li><a href="games?list">En vente</a></li>
+							<li><a href="games?archived">Archivés</a></li>
 							<li><a href="gameDetails">Ajouter/Modifier</a></li>
 						</ul>
 					</li>

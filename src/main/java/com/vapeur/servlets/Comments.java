@@ -45,7 +45,7 @@ public class Comments extends HttpServlet {
 				prln("servlet comments : admin loggué");
 				GameDAO gamedao = new GameDAO();
 				
-				GameResults gameresults = gamedao.adminReadAll();
+				GameResults gameresults = gamedao.adminReadAll(false);
 				
 				request.setAttribute("table", "gamesComments");
 				request.setAttribute("totalGames", gameresults.getTotalResults());

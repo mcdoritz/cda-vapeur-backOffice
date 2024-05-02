@@ -51,6 +51,47 @@ public class ModeDAO {
             ex.printStackTrace();
         }
     }
+    
+    public void updateLinksBetweenGameAndModes(int game_id, ArrayList<Mode> modes) {
+        try {
+        	PreparedStatement ps1 = Database.connexion.prepareStatement("DELETE FROM games_modes WHERE game_id = ?");
+            ps1.setInt(1, game_id);
+            
+            
+            String query = "INSERT INTO games_modes (game_id, mode_id) VALUES ";
+            int index = 0;
+            ArrayList<Integer> modes_id = new ArrayList<>();
+            for(Mode m:modes) {
+            	query += "(?, ?), ";
+            	index += 2;
+            	modes_id.add(m.getId());
+            }
+            
+            query = query.substring(0, query.length()-2) + ";";
+            
+            PreparedStatement ps2 = Database.connexion.prepareStatement(query);
+            int j = 0;
+            for(int i = 1; i <= index; i+=2) {
+            	ps2.setInt(i, game_id);
+            	ps2.setInt(i+1, modes_id.get(j) );
+            	j++;
+            }
+            
+            prln(query);
+            
+            try {
+            	ps1.executeUpdate();
+                ps2.executeUpdate();
+            } catch (Exception ex) {
+            	ex.printStackTrace();
+            }
+            
+            
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public Mode getById(int mode_id) {
         try {
