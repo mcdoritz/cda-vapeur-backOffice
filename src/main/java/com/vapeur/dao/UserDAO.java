@@ -178,11 +178,15 @@ public class UserDAO {
         	
             PreparedStatement ps = Database.connexion.prepareStatement(query);
             ResultSet resultat = ps.executeQuery();
+            
+            OrderDAO orderdao = new OrderDAO();
 
             while (resultat.next()) {
                 User objet = new User();
-
-                objet.setId(resultat.getInt("id"));
+                
+                int user_id = resultat.getInt("id");
+                
+                objet.setId(user_id);
                 objet.setEmail(resultat.getString("email"));
                 objet.setNickname(resultat.getString("nickname"));
                 objet.setPassword(resultat.getString("password"));
@@ -191,6 +195,8 @@ public class UserDAO {
                 objet.setActive(resultat.getBoolean("active"));
                 objet.setShippingAddress(resultat.getString("shipping_address"));
                 objet.setAvatar(resultat.getString("avatar"));
+                objet.setTotalOrders(orderdao.countOrdersByUserId(user_id));
+                objet.setTotalAmount(orderdao.countAmountByUserId(user_id));
 
                 usersList.add(objet);
             }

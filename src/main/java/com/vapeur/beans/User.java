@@ -15,6 +15,8 @@ public class User implements Serializable {
     private boolean active;
     private String shippingAddress;
     private String avatar;
+    private int totalOrders;
+    private float totalAmount;
 
     // Constructeurs
     public User() {
@@ -26,7 +28,7 @@ public class User implements Serializable {
         setPassword(password);
     }
 
-    public User(int id, String email, String nickname, String password, String firstname, String lastname, boolean active, String shippingAddress, String avatar) throws BeanException {
+    public User(int id, String email, String nickname, String password, String firstname, String lastname, boolean active, String shippingAddress, String avatar, int totalOrders, float totalAmount) throws BeanException {
         setId(id);
         setEmail(email);
         setNickname(nickname);
@@ -36,6 +38,8 @@ public class User implements Serializable {
         setActive(active);
         setShippingAddress(shippingAddress);
         setAvatar(avatar);
+        setTotalOrders(totalOrders);
+        setTotalAmount(totalAmount);
     }
 
     // Getters et setters
@@ -134,6 +138,22 @@ public class User implements Serializable {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+
+	public int getTotalOrders() {
+		return totalOrders;
+	}
+
+	public void setTotalOrders(int totalOrders) {
+		this.totalOrders = totalOrders;
+	}
+
+	public float getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(float totalAmount) {
+		this.totalAmount = totalAmount;
 	}
 
 	// Méthode toString pour l'affichage

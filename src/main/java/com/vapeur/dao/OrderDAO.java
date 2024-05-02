@@ -177,6 +177,82 @@ public class OrderDAO {
             throw new DAOException("Erreur avec la BDD dans la récupération des commandes");
         }
     }
+	
+	public List<Order> readAllByOrderId(int order_id) throws DAOException {
+        ArrayList<Order> ordersList = new ArrayList<>();      
+        
+        try {
+            PreparedStatement ps = Database.connexion.prepareStatement("SELECT DISTINCT orders.id AS order_id, orders.date AS order_date, order_details.quantity AS quantity, order_details.unit_price AS amount, games.id AS game_id, games.title AS title FROM order_details JOIN orders ON order_details.order_id = orders.id JOIN games ON order_details.game_id = games.id WHERE order_details.order_id IN (SELECT id FROM orders WHERE order_id = ?) ORDER BY game_id");
+            ps.setInt(1, order_id);
+            ResultSet resultat = ps.executeQuery();
+            
+            DecimalFormat decimals = new DecimalFormat("#.##");
+            OrderDetailDAO orderdetailsdao = new OrderDetailDAO();
+
+            while (resultat.next()) {
+                Order object = new Order();
+                
+                object.setId(order_id);
+                object.setDate(resultat.getDate("order_date"));
+                object.setAmount(resultat.getFloat("amount"));
+                object.setTotalQuantity(resultat.getInt("quantity"));
+                object.setName(resultat.getString("title"));
+                
+                ordersList.add(object);
+            }
+            if(ordersList.size() > 0) {
+            	return ordersList;
+            }else {
+            	return null;
+            }
+            
+        } catch (Exception ex) {
+            bddSays("readAll", false, 0, null);
+            ex.printStackTrace();
+            throw new DAOException("Erreur avec la BDD dans la récupération des commandes");
+        }
+    }
+	
+	public int countOrdersByUserId(int user_id) throws DAOException {
+    
+        
+        try {
+            PreparedStatement ps = Database.connexion.prepareStatement("SELECT COUNT(*) AS count FROM orders WHERE user_id = ?");
+            ps.setInt(1, user_id);
+            ResultSet resultat = ps.executeQuery();
+            
+            int count = 0;
+
+            while (resultat.next()) {
+                count = resultat.getInt("count");
+            }
+            return count;
+        } catch (Exception ex) {
+            bddSays("readAll", false, 0, null);
+            ex.printStackTrace();
+            throw new DAOException("Erreur avec la BDD dans la récupération des commandes");
+        }
+    }
+	
+	public float countAmountByUserId(int user_id) throws DAOException {
+
+        try {
+            PreparedStatement ps = Database.connexion.prepareStatement("SELECT quantity, unit_price FROM order_details JOIN orders ON order_details.order_id = orders.id WHERE orders.user_id = ?");
+            ps.setInt(1, user_id);
+            ResultSet resultat = ps.executeQuery();
+            
+            float amount = 0;
+
+            while (resultat.next()) {
+                amount += resultat.getInt("quantity") * resultat.getFloat("unit_price");
+            }
+            return amount;
+        } catch (Exception ex) {
+            bddSays("readAll", false, 0, null);
+            ex.printStackTrace();
+            throw new DAOException("Erreur avec la BDD dans la récupération des commandes");
+        }
+    }
 
     public void delete(int order_id) {
         try {
