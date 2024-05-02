@@ -4,8 +4,10 @@ import static com.vapeur.config.ConnexionVerification.checkAdmin;
 import static com.vapeur.config.Debug.prln;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import com.vapeur.beans.Developer;
 import com.vapeur.beans.Game;
+import com.vapeur.beans.GameLanguage;
 import com.vapeur.beans.Genre;
 import com.vapeur.beans.Language;
 import com.vapeur.beans.Mode;
@@ -93,8 +96,88 @@ public class DeveloperDetails extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
-		doGet(request, response);
+		request.setCharacterEncoding("UTF-8");
+		try {
+			if(checkAdmin(session)) {
+				prln("servlet developerDetails Post : admin loggué");
+				
+				//Vérif formulaire
+				
+				if(request.getParameter("name") != null && request.getParameter("creation-date") != null && request.getParameter("developer_id") != null) {
+					prln("formulaire validé !");
+					
+					Developer developer = new Developer();
+					
+					if(request.getParameter("developer_id") != "") {
+						if(Integer.valueOf(request.getParameter("developer_id")) > 0){
+				    		developer.setId(Integer.valueOf(request.getParameter("developer_id")));
+				    	}
+					}
+					
+					developer.setName(request.getParameter("name"));
+					
+					if(request.getParameter("name") != null) {
+						developer.setCountry(request.getParameter("name"));
+					}
+					
+					if(request.getParameter("creation-date") != null) {
+						// DATE C'EST COMPLIQUE MAIS C'EST COMPLIQUE
+				    	String dateStr = request.getParameter("creation-date");
+				    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				    	java.util.Date utilDate = sdf.parse(dateStr);
+				    	java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+						developer.setCreationDate(sqlDate);
+					}
+					
+					if(request.getParameter("instagram") != null) {
+						developer.setUrlInstagram(request.getParameter("instagram"));
+					}else {
+						developer.setUrlInstagram(null);
+					}
+					
+					if(request.getParameter("X") != null) {
+						developer.setUrlX(request.getParameter("X"));
+					}else {
+						developer.setUrlX(null);
+					}
+					
+					if(request.getParameter("facebook") != null) {
+						developer.setUrlFacebook(request.getParameter("facebook"));
+					}else {
+						developer.setUrlFacebook(null);
+					}
+					
+					if(request.getParameter("website") != null) {
+						developer.setUrlWebsite(request.getParameter("website"));
+					}else {
+						developer.setUrlWebsite(null);
+					}
+					
+					DeveloperDAO developerdao = new DeveloperDAO();
+			    	
+			    	
+			    	if(developerdao.save(developer)) {
+						response.sendRedirect("developers?list&action=saveOk");
+					}else {
+						response.sendRedirect("developers?list&action=saveKo");
+					}
+			    	
+				}else {
+			    	prln("formulaire PAS validé !");
+			    	response.sendRedirect("developers?list&action=saveKo");
+			    }
+				
+			}else {
+				response.sendRedirect("login");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			prln("erreur : " + e.getMessage());
+			request.setAttribute("errorMsg", e.getMessage() );
+			response.sendRedirect("login");
+		}
 	}
 
 }

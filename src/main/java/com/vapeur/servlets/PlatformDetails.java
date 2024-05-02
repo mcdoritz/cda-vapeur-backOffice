@@ -4,6 +4,7 @@ import static com.vapeur.config.ConnexionVerification.checkAdmin;
 import static com.vapeur.config.Debug.prln;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,8 +95,52 @@ public class PlatformDetails extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
-		doGet(request, response);
+		request.setCharacterEncoding("UTF-8");
+		try {
+			if(checkAdmin(session)) {
+				prln("servlet developerDetails Post : admin loggué");
+				
+				//Vérif formulaire
+				
+				if(request.getParameter("name") != null && request.getParameter("acronym") != null && request.getParameter("platform_id") != null) {
+					prln("formulaire validé !");
+					
+					Platform platform = new Platform();
+					
+					if(request.getParameter("platform_id") != "") {
+						if(Integer.valueOf(request.getParameter("platform_id")) > 0){
+							platform.setId(Integer.valueOf(request.getParameter("platform_id")));
+				    	}
+					}
+					platform.setAcronym(request.getParameter("acronym"));
+					platform.setName(request.getParameter("name"));
+
+					
+					PlatformDAO platformdao = new PlatformDAO();
+			    	
+			    	
+			    	if(platformdao.save(platform)) {
+						response.sendRedirect("platforms?list&action=saveOk");
+					}else {
+						response.sendRedirect("platforms?list&action=saveKo");
+					}
+			    	
+				}else {
+			    	prln("formulaire PAS validé !");
+			    	response.sendRedirect("platforms?list&action=saveKo");
+			    }
+				
+			}else {
+				response.sendRedirect("login");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			prln("erreur : " + e.getMessage());
+			request.setAttribute("errorMsg", e.getMessage() );
+			response.sendRedirect("login");
+		}
 	}
 
 }

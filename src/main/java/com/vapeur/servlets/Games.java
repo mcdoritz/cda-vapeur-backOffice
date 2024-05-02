@@ -38,6 +38,8 @@ public class Games extends HttpServlet {
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
 		request.setCharacterEncoding("UTF-8");
 		
+		String statusDesJeux = "en vente";
+		
 		if(request.getParameter("action") != null) {
 			if(request.getParameter("action").equals("desarchivedOk")) {
 				request.setAttribute("infoMsg", "Jeu désarchivé !");
@@ -45,6 +47,10 @@ public class Games extends HttpServlet {
 				request.setAttribute("infoMsg", "Jeu archivé !");
 			}else if(request.getParameter("action").equals("archivedKo")){
 				request.setAttribute("errorMsg", "Erreur avec l'archivage du jeu");
+			}else if(request.getParameter("action").equals("saveOk")){
+				request.setAttribute("infoMsg", "Jeu enregistré !");
+			}else if(request.getParameter("action").equals("saveKo")){
+				request.setAttribute("errorMsg", "Erreur, jeu non enregistré !");
 			}
 		}
 
@@ -65,6 +71,7 @@ public class Games extends HttpServlet {
 					}
 				}else if (request.getParameter("archived") != null) {
 					prln("jeux archivés");
+					statusDesJeux = " archivés";
 					GameResults gameresults = gamedao.adminReadAll(true);
 					if(gameresults.getTotalResults() != 0) {
 						request.setAttribute("archive", true);
@@ -82,7 +89,7 @@ public class Games extends HttpServlet {
 				
 				request.setAttribute("table", "games");
 				
-				request.setAttribute("pageTitle", "Vapeur.Admin : Jeux" );
+				request.setAttribute("pageTitle", "Vapeur.Admin : Jeux " + statusDesJeux );
 
 				request.getRequestDispatcher("WEB-INF/app/games.jsp").forward(request, response);
 			}else {

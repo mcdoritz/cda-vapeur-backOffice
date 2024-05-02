@@ -8,8 +8,7 @@
 						<th class="border-top-0">Nom</th>
 						<th class="border-top-0">Date de création</th>
 						<th class="border-top-0">Pays</th>
-						<th class="border-top-0"></th>
-						<th class="border-top-0"></th>
+						<th class="border-top-0">Modifier</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -19,7 +18,6 @@
 							<td><span class="ml-2"><c:out value="${developer.creationDate }"></c:out></span></td>
 							<td><span class="ml-2"><c:out value="${developer.country }"></c:out></span></td>
 							<td><a href="developerDetails?id=${developer.id }"><span class="ml-2">[ <i class="fa-solid fa-pen"></i> ]</span></a></td>
-							<td><a href="developerDelete?id=${developer.id }"><span class="ml-2">[ <i class="fa-solid fa-box-archive"></i> / <i class="fa-solid fa-trash-can"></i> ]</span></a></td>
 						</tr>
 
 

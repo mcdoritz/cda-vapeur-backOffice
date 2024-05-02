@@ -18,7 +18,7 @@ import com.vapeur.dao.UserDAO;
 public class UserDAO {
 
 	
-	public Boolean save(User object) throws DAOException {
+	public Boolean save(User object, Boolean admin) throws DAOException {
 		try {
 			
 			String hashPassword = BCrypt.hashpw(object.getPassword(), BCrypt.gensalt());
@@ -30,7 +30,12 @@ public class UserDAO {
 			        try (PreparedStatement ps = Database.connexion.prepareStatement(query)) {
 			            ps.setString(1, object.getEmail());
 			            ps.setString(2, object.getNickname());
-			            ps.setString(3, hashPassword);
+			            if(admin) {
+			            	ps.setString(3, object.getPassword());
+			            }else {
+			            	ps.setString(3, hashPassword);
+			            }
+			            
 			            ps.setString(4, object.getFirstname());
 			            ps.setString(5, object.getLastname());
 			            ps.setBoolean(6, object.isActive());

@@ -6,8 +6,7 @@
 				<thead>
 					<tr>
 						<th class="border-top-0">Nom</th>
-						<th class="border-top-0"></th>
-						<th class="border-top-0"></th>
+						<th class="border-top-0">Modifier</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -15,7 +14,6 @@
 						<tr>
 							<td><span class="ml-2"><c:out value="${mode.name }"></c:out></span></td>
 							<td><a href="modeDetails?id=${mode.id }"><span class="ml-2">[ <i class="fa-solid fa-pen"></i> ]</span></a></td>
-							<td><a href="modeDelete?id=${mode.id }"><span class="ml-2">[ <i class="fa-solid fa-box-archive"></i> / <i class="fa-solid fa-trash-can"></i> ]</span></a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

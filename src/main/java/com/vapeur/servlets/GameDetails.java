@@ -76,7 +76,7 @@ public class GameDetails extends HttpServlet {
 				request.setAttribute("developers", developers);
 				request.setAttribute("languages", languages);
 				
-				if(request.getParameter("id") != null && Integer.valueOf(request.getParameter("id")) > 0) {
+				if(request.getParameter("id") != null) {
 					
 					int game_id = Integer.valueOf(request.getParameter("id"));
 					GameDAO gamedao = new GameDAO();
@@ -100,10 +100,13 @@ public class GameDetails extends HttpServlet {
 						}
 						
 
-					}else{
+					}else if(Integer.valueOf(request.getParameter("id")) == 0){ //Ajout
+						request.setAttribute("pageTitle", "Vapeur.Admin : Ajout d'un jeu" );
+						request.getRequestDispatcher("WEB-INF/app/gameDetails.jsp").forward(request, response);
 						
-						
-						request.setAttribute("pageTitle", "Vapeur.Admin : Modification ou ajout d'un jeu" );
+					}else { // Modif
+
+						request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un jeu" );
 
 						List<Language> gameLanguages = languagedao.readAllByGameId(game_id);
 						ArrayList<Boolean> interfaceSupport = new ArrayList<>();
@@ -114,31 +117,13 @@ public class GameDetails extends HttpServlet {
 						
 						for(Language l:gameLanguages) {
 							prln("id : " + l.getId() + " " + l.getLanguage() + " : " + l.isInterfaceSupport() + " " + l.isFullAudioSupport() + " " + l.isSubtitles());
-							
-							
+
 							languageId.add(l.getId());
 							languageName.add(l.getLanguage());
 							interfaceSupport.add(l.isInterfaceSupport());
 							audioSupport.add(l.isFullAudioSupport());
 							subtitlesSupport.add(l.isSubtitles());
 						
-						}
-						
-						
-						for(Language l:game.getLanguages()) {
-							prln(l.getLanguage());
-						}
-						
-						for(String l:languageName) {
-							prln(l);
-						}
-						
-						for(int i:languageId) {
-							prln(i);
-						}
-						
-						for(Boolean b:interfaceSupport) {
-							prln(b);
 						}
 							
 						if(game.getTitle() != null) {
@@ -210,11 +195,14 @@ public class GameDetails extends HttpServlet {
 		        }
 			    
 			    if(validé) {
+			    	prln("game_id : " + request.getParameter("game_id"));
 			    	prln("formulaire validé !");
-			    	if(Integer.valueOf(request.getParameter("game_id")) > 0){
-			    		game.setId(Integer.valueOf(request.getParameter("game_id")));
+			    	if(request.getParameter("game_id") != "") {
+			    		if(Integer.valueOf(request.getParameter("game_id")) > 0){
+				    		game.setId(Integer.valueOf(request.getParameter("game_id")));
+				    	}
 			    	}
-			    	
+
 			    	game.setTitle(request.getParameter("title"));
 			    	game.setDescription(request.getParameter("description"));
 			    	game.setClassification(Integer.valueOf(request.getParameter("classification")));
@@ -236,15 +224,11 @@ public class GameDetails extends HttpServlet {
 			    	game.setStock(Integer.valueOf(request.getParameter("stock")));
 			    	game.setDeveloperId(Integer.valueOf(request.getParameter("developer")));
 			    	game.setPlatformId(Integer.valueOf(request.getParameter("platform")));
-			    	
-			    	prln("-----------------------------------------------");
-			    	prln("-----------------------------------------------");
-			    	prln(request.getParameter("archived"));
-			    	prln(Boolean.valueOf(request.getParameter("archived")));
-			    	prln("-----------------------------------------------");
-			    	prln("-----------------------------------------------");
+
 			    	if(request.getParameter("archived") != null) {
-			    		game.setArchived(Boolean.valueOf(true));
+			    		game.setArchived(true);
+			    	}else {
+			    		game.setArchived(false);
 			    	}
 			    	
 			    	
@@ -311,26 +295,23 @@ public class GameDetails extends HttpServlet {
 			    		}
 			    		
 			    	}
-			    	prln("***********************");
-			    	prln("Taille du tableau game languages : " + gameLanguages.size());
-			    	prln("***********************");
 			    	
 			    	game.setGameLanguages(gameLanguages);
 			    	
 			    	GameDAO gamedao = new GameDAO();
-			    	gamedao.save(game);
+			    	
+			    	
+			    	
+			    	if(gamedao.save(game)) {
+						response.sendRedirect("games?list&action=saveOk");
+					}else {
+						response.sendRedirect("games?list&action=saveKo");
+					}
 
 
 			    }else {
 			    	prln("formulaire PAS validé !");
-			    }
-				
-				DeveloperDAO developerdao = new DeveloperDAO();
-				GenreDAO genredao = new GenreDAO();
-				ModeDAO modedao = new ModeDAO();
-				PlatformDAO platformdao = new PlatformDAO();
-				LanguageDAO languagedao = new LanguageDAO();
-				
+			    }		
 				
 
 				doGet(request, response);

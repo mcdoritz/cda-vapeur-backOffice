@@ -23,7 +23,7 @@ public class GameDAO {
 	
 	private int limitPerPage = 12;
 
-	public void save(Game object) {
+	public Boolean save(Game object) {
 		try {
 			// Préparer les tags array->string
 			String tags = "";
@@ -88,6 +88,8 @@ public class GameDAO {
 					
 					ps.executeUpdate();
 					
+					return true;
+					
 					
 				} catch (Exception e){
 					e.printStackTrace();
@@ -97,7 +99,7 @@ public class GameDAO {
 				String objectInfos = object.getTitle();
 				bddSays("update", true, object.getId(), objectInfos);
 			} else {
-				String query = "INSERT INTO games (title, description, classification, price, release_date, users_avg_score, total_reviews, controller_support, requires_3rd_party_account, stock, tags, developer_id, platform_id, archived) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				String query = "INSERT INTO games (title, description, classification, price, release_date, users_avg_score, total_reviews, controller_support, requires_3rd_party_account, stock, tags, developer_id, platform_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				try (PreparedStatement ps = Database.connexion.prepareStatement(query,
 						Statement.RETURN_GENERATED_KEYS)) {
 					ps.setString(1, object.getTitle());
@@ -112,23 +114,53 @@ public class GameDAO {
 					ps.setInt(10, object.getStock());
 					ps.setString(11, tags);
 					ps.setInt(12, object.getDeveloperId());
-					ps.setInt(12, object.getPlatformId());
-					ps.setBoolean(13, object.getArchived());
+					ps.setInt(13, object.getPlatformId());
 					ps.executeUpdate();
+					
+					int game_id = 0;
+					
 					try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
 						if (generatedKeys.next()) {
 							String objectInfos = object.getTitle();
+							game_id = generatedKeys.getInt(1);
 							bddSays("create", true, generatedKeys.getInt(1), objectInfos);
 						} else {
 							bddSays("create", false, object.getId(), null);
 							throw new SQLException("L'insertion a échoué, aucun ID généré n'a été récupéré.");
 						}
 					}
+					
+					GenreDAO genredao = new GenreDAO();
+					ModeDAO modedao = new ModeDAO();
+					LanguageDAO languagedao = new LanguageDAO();
+					
+					if(object.getGenres() != null) {
+						genredao.updateLinksBetweenGameAndGenres(game_id, object.getGenres());
+					}else {
+						throw new DAOException("Erreur, le tableau des genres du jeu ne contient rien.");
+					}
+					
+					if(object.getModes() != null) {
+						modedao.updateLinksBetweenGameAndModes(game_id, object.getModes());
+					}else {
+						throw new DAOException("Erreur, le tableau des modes du jeu ne contient rien.");
+					}
+					
+					if(object.getGameLanguages() != null) {
+						languagedao.updateLinksBetweenGameAndLanguages(game_id, object.getGameLanguages());
+					}else {
+						throw new DAOException("Erreur, le tableau des languages du jeu ne contient rien.");
+					}
+					
+					return true;
+					
 				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			return false;
 		}
+		return false;
 	}
 	
 	public Game getStockAndTitle(int game_id) {
@@ -564,7 +596,7 @@ public class GameDAO {
 			queryConditions += " ) ";
 			prln(queryConditions);
 
-			query += queryJoins + " WHERE stock > 0" + queryConditions + " ORDER BY RAND()";			
+			query += queryJoins + " WHERE stock > 0" + queryConditions + " AND archived = false ORDER BY RAND()";			
 
 			prln(query);
 
@@ -789,7 +821,7 @@ public class GameDAO {
 	public Game getNameAndIdById(int id) {
 		try {
 
-			PreparedStatement ps = Database.connexion.prepareStatement("SELECT title FROM games WHERE id = ?;");
+			PreparedStatement ps = Database.connexion.prepareStatement("SELECT title FROM games WHERE id = ? AND archived = false");
 			ps.setInt(1, id);
 			ResultSet resultat = ps.executeQuery();
 			Game object = new Game();

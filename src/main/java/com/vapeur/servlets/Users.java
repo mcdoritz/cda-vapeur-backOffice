@@ -38,6 +38,14 @@ public class Users extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+		
+		if(request.getParameter("action") != null) {
+			if(request.getParameter("action").equals("saveOk")){
+				request.setAttribute("infoMsg", "Utilisateur enregistré !");
+			}else if(request.getParameter("action").equals("saveKo")){
+				request.setAttribute("errorMsg", "Erreur, utilisateur non enregistré !");
+			}
+		}
 
 		try {
 			if(checkAdmin(session)) {

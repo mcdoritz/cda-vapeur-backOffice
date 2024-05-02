@@ -93,8 +93,52 @@ public class ModeDetails extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
-		doGet(request, response);
+		request.setCharacterEncoding("UTF-8");
+		try {
+			if(checkAdmin(session)) {
+				prln("servlet modeDetails Post : admin loggué");
+				
+				//Vérif formulaire
+				
+				if(request.getParameter("name") != null && request.getParameter("mode_id") != null) {
+					prln("formulaire validé !");
+					
+					Mode mode = new Mode();
+					
+					if(request.getParameter("mode_id") != "") {
+						if(Integer.valueOf(request.getParameter("mode_id")) > 0){
+							mode.setId(Integer.valueOf(request.getParameter("mode_id")));
+				    	}
+					}
+					
+					mode.setName(request.getParameter("name"));
+
+					
+					ModeDAO modedao = new ModeDAO();
+			    	
+			    	
+			    	if(modedao.save(mode)) {
+						response.sendRedirect("modes?list&action=saveOk");
+					}else {
+						response.sendRedirect("modes?list&action=saveKo");
+					}
+			    	
+				}else {
+			    	prln("formulaire PAS validé !");
+			    	response.sendRedirect("modes?list&action=saveKo");
+			    }
+				
+			}else {
+				response.sendRedirect("login");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			prln("erreur : " + e.getMessage());
+			request.setAttribute("errorMsg", e.getMessage() );
+			response.sendRedirect("login");
+		}
 	}
 
 }

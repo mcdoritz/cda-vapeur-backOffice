@@ -95,8 +95,52 @@ public class GenreDetails extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
-		doGet(request, response);
+		request.setCharacterEncoding("UTF-8");
+		try {
+			if(checkAdmin(session)) {
+				prln("servlet genreDetails Post : admin loggué");
+				
+				//Vérif formulaire
+				
+				if(request.getParameter("name") != null && request.getParameter("genre_id") != null) {
+					prln("formulaire validé !");
+					
+					Genre genre = new Genre();
+					
+					if(!request.getParameter("genre_id").equals("")) {
+						if(Integer.valueOf(request.getParameter("genre_id")) > 0){
+							genre.setId(Integer.valueOf(request.getParameter("genre_id")));
+				    	}
+					}
+					
+					genre.setName(request.getParameter("name"));
+
+					
+					GenreDAO genredao = new GenreDAO();
+			    	
+			    	
+			    	if(genredao.save(genre)) {
+						response.sendRedirect("genres?list&action=saveOk");
+					}else {
+						response.sendRedirect("genres?list&action=saveKo");
+					}
+			    	
+				}else {
+			    	prln("formulaire PAS validé !");
+			    	response.sendRedirect("genres?list&action=saveKo");
+			    }
+				
+			}else {
+				response.sendRedirect("login");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			prln("erreur : " + e.getMessage());
+			request.setAttribute("errorMsg", e.getMessage() );
+			response.sendRedirect("login");
+		}
 	}
 
 }

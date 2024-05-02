@@ -15,7 +15,7 @@ import static com.vapeur.config.Debug.*;
 
 public class ModeDAO {
 
-    public void save(Mode object) {
+    public Boolean save(Mode object) {
         try {
             if (object.getId() != 0) {
                 String query = "UPDATE modes SET name = ? WHERE id = ?";
@@ -28,6 +28,7 @@ public class ModeDAO {
                 }
                 String objectInfos = "Mode ID: " + object.getId();
                 bddSays("update", true, object.getId(), objectInfos);
+                return true;
             } else {
                 String query = "INSERT INTO modes (name) VALUES (?)";
                 
@@ -40,6 +41,7 @@ public class ModeDAO {
                         if (generatedKeys.next()) {
                             String objectInfos = "Mode ID: " + generatedKeys.getInt(1);
                             bddSays("create", true, generatedKeys.getInt(1), objectInfos);
+                            return true;
                         } else {
                             bddSays("create", false, object.getId(), null);
                             throw new SQLException("L'insertion a échoué, aucun ID généré n'a été récupéré.");
@@ -49,6 +51,7 @@ public class ModeDAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            return false;
         }
     }
     

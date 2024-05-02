@@ -16,7 +16,7 @@ import static com.vapeur.config.Debug.*;
 
 public class GenreDAO {
 
-    public void save(Genre object) {
+    public Boolean save(Genre object) {
         try {
             if (object.getId() != 0) {
                 String query = "UPDATE genres SET name = ? WHERE id = ?";
@@ -29,6 +29,7 @@ public class GenreDAO {
                 }
                 String objectInfos = "Genre ID: " + object.getId();
                 bddSays("update", true, object.getId(), objectInfos);
+                return true;
             } else {
                 String query = "INSERT INTO genres (name) VALUES (?)";
                 
@@ -41,6 +42,7 @@ public class GenreDAO {
                         if (generatedKeys.next()) {
                             String objectInfos = "Genre ID: " + generatedKeys.getInt(1);
                             bddSays("create", true, generatedKeys.getInt(1), objectInfos);
+                            return true;
                         } else {
                             bddSays("create", false, object.getId(), null);
                             throw new SQLException("L'insertion a échoué, aucun ID généré n'a été récupéré.");
@@ -50,6 +52,7 @@ public class GenreDAO {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            return false;
         }
     }
     

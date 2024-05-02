@@ -43,38 +43,6 @@ public class AdminDetails extends HttpServlet {
 			if(checkAdmin(session)) {
 				prln("servlet adminDetails : admin loggué");
 			
-				
-				if(request.getParameter("id") != null && Integer.valueOf(request.getParameter("id")) > 0) {
-					
-					Admin currentAdmin = new Admin();
-					
-					currentAdmin = (Admin) request.getAttribute("admin");
-					
-					if(Integer.valueOf(request.getParameter("id")) == currentAdmin.getId()){
-						int admin_id = Integer.valueOf(request.getParameter("id"));
-						AdminDAO admindao = new AdminDAO();
-
-						Admin admin = new Admin();
-				
-
-						admin = admindao.getById(admin_id);
-
-						if(admin.getEmail() != null) {
-							
-							request.setAttribute("admin", admin );
-							request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un admin" );
-						}else {
-							request.setAttribute("errorMsg", "Erreur, pas de admin trouvé." );
-						}
-					}else {
-						request.setAttribute("errorMsg", "Erreur, vous ne pouvez pas modifier un autre admin." );
-					}
-					
-					
-				}else {
-					request.setAttribute("pageTitle", "Vapeur.Admin : Ajout d'un admin" );
-				}
-
 				request.getRequestDispatcher("WEB-INF/app/adminDetails.jsp").forward(request, response);
 			}else {
 				response.sendRedirect("login");

@@ -13,86 +13,70 @@
 					<li class="menu-title">Navigation</li>
 
 					<li class="mm-active"><a href="dashboard" class="active">
-							<i class="dripicons-meter"></i> <span> Dashboard </span>
+							<i class="fa-solid fa-gauge-high"></i><span> Dashboard </span>
 					</a></li>
 
-					<li><a href="javascript: void(0);"> <i
-							class="dripicons-document"></i> <span> Jeux </span> <span
+					<li><a href="javascript: void(0);"><i class="fa-solid fa-gamepad"></i><span> Jeux </span> <span
 							class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="games?list">En vente</a></li>
-							<li><a href="games?archived">Archivés</a></li>
-							<li><a href="gameDetails">Ajouter/Modifier</a></li>
-						</ul>
-					</li>
-					<li><a href="javascript: void(0);"> <i
-							class="dripicons-user-group"></i> <span> Utilisateurs </span> <span
-							class="menu-arrow"></span>
-					</a>
-						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="users?list">Lister</a></li>
-							<li><a href="userDetails">Ajouter/Modifier</a></li>
+							<li><a href="games?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;En vente</a></li>
+							<li><a href="games?archived"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Archivés</a></li>
+							<li><a href="gameDetails?id=0"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
-					<li><a href="javascript: void(0);"> <i
-							class="dripicons-anchor"></i> <span> Commentaires </span> <span class="badge badge-danger float-center" style="${notifs > 0 ? '' : 'background-color:green!important'}"><c:out value="${notifs } "></c:out></span>
-						<span class="menu-arrow"></span>
-					</a>
-						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="comments?list">Lister par jeux</a></li>
-							<li><a href="commentsReport">Signalements</a></li>
-						</ul>
-					</li>
+					<li class="mm-active"><a href="users" class="active">
+							<i class="fa-solid fa-user"></i><span> Utilisateurs </span>
+					</a></li>
 					
-					<li><a href="javascript: void(0);"> <i
-							class="dripicons-anchor"></i> <span> Développeurs </span>
+					<li class="mm-active"><a href="comments" class="active">
+							<i class="fa-regular fa-comment-dots"></i> <span> Commentaires </span> <span class="badge badge-danger float-center" style="${notifs > 0 ? '' : 'background-color:green!important'}"><c:out value="${notifs } "></c:out></span>
+					</a></li>
+
+					
+					<li><a href="javascript: void(0);"><i class="fa-solid fa-people-group"></i> <span> Développeurs </span>
 							<span class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="developers?list">Lister</a></li>
-							<li><a href="developerDetails">Ajouter/Modifier</a></li>
+							<li><a href="developers?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
+							<li><a href="developerDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
-					<li><a href="javascript: void(0);"> <i
-							class="dripicons-anchor"></i> <span> Plateformes </span><span
+					<li><a href="javascript: void(0);"> <i class="fa-solid fa-desktop"></i><span> Plateformes </span><span
 							class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="platforms?list">Lister</a></li>
-							<li><a href="platformDetails">Ajouter/Modifier</a></li>
+							<li><a href="platforms?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
+							<li><a href="platformDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
-					<li><a href="javascript: void(0);"> <i
-							class="dripicons-anchor"></i> <span> Genres </span><span
+					<li><a href="javascript: void(0);"><i class="fa-solid fa-bolt"></i><span> Genres </span><span
 							class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="genres?list">Lister</a></li>
-							<li><a href="genreDetails">Ajouter/Modifier</a></li>
+							<li><a href="genres?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
+							<li><a href="genreDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
-					<li><a href="javascript: void(0);"> <i
-							class="dripicons-anchor"></i> <span> Modes de jeu </span><span
+					<li><a href="javascript: void(0);"> <i class="fa-solid fa-dice-five"></i><span> Modes de jeu </span><span
 							class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="modes?list">Lister</a></li>
-							<li><a href="modeDetails">Ajouter/Modifier</a></li>
+							<li><a href="modes?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
+							<li><a href="modeDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
-					<li><a href="javascript: void(0);"> <i
-							class="dripicons-briefcase"></i> <span> Admins </span> <span
+					<li><a href="javascript: void(0);"> <i class="fa-solid fa-chess-king"></i><span> Admins </span> <span
 							class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="admins?list">Lister</a></li>
-							<li><a href="adminDetails">Ajouter/Modifier</a></li>
+							<li><a href="admins?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
+							<li><a href="adminDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 

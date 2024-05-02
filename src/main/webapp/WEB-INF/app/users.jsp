@@ -12,7 +12,7 @@
 						<th class="border-top-0">Active</th>
 						<th class="border-top-0">Adresse</th>
 						<th class="border-top-0">Modifier</th>
-						<th class="border-top-0">Arch.Suppr.</th>
+						<th class="border-top-0">Punir</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -25,7 +25,7 @@
 							<td><span class="ml-2"><c:out value="${user.active ? 'actif' : 'inactif' }"></c:out></span></td>
 							<td><span class="ml-2"><c:out value="${not empty user.shippingAddress ? 'renseignée' : 'non renseignée' }"></c:out></span></td>
 							<td><a href="userDetails?id=${user.id }"><span class="ml-2">[ <i class="fa-solid fa-pen"></i> ]</span></a></td>
-							<td><a href="userDelete?id=${user.id }"><span class="ml-2">[ <i class="fa-solid fa-box-archive"></i> / <i class="fa-solid fa-trash-can"></i> ]</span></a></td>
+							<td><a href="userDelete?id=${user.id }"><span class="ml-2">[ <i class="fa-solid fa-face-surprise"></i> ]</span></a></td>
 						</tr>
 
 

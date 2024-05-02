@@ -16,24 +16,27 @@ import static com.vapeur.config.Debug.*;
 
 public class PlatformDAO {
 
-    public void save(Platform object) {
+    public Boolean save(Platform object) {
         try {
             if (object.getId() != 0) {
-                String query = "UPDATE platforms SET name = ? WHERE id = ?";
+                String query = "UPDATE platforms SET name = ?, acronym = ? WHERE id = ?";
                 
                 try (PreparedStatement ps = Database.connexion.prepareStatement(query)) {
                     ps.setString(1, object.getName());
-                    ps.setInt(2, object.getId());
+                    ps.setString(2, object.getAcronym());
+                    ps.setInt(3, object.getId());
 
                     ps.executeUpdate();
                 }
                 String objectInfos = "Platform ID: " + object.getId();
                 bddSays("update", true, object.getId(), objectInfos);
+                return true;
             } else {
-                String query = "INSERT INTO platforms (name) VALUES (?)";
+                String query = "INSERT INTO platforms (name, acronym) VALUES (?, ?)";
                 
                 try (PreparedStatement ps = Database.connexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, object.getName());
+                    ps.setString(2, object.getAcronym());
 
                     ps.executeUpdate();
                     
@@ -41,15 +44,18 @@ public class PlatformDAO {
                         if (generatedKeys.next()) {
                             String objectInfos = "Platform ID: " + generatedKeys.getInt(1);
                             bddSays("create", true, generatedKeys.getInt(1), objectInfos);
+                            return true;
                         } else {
                             bddSays("create", false, object.getId(), null);
                             throw new SQLException("L'insertion a échoué, aucun ID généré n'a été récupéré.");
                         }
                     }
                 }
+                
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            return false;
         }
     }
 
@@ -94,6 +100,7 @@ public class PlatformDAO {
                 Platform object = new Platform();
 
                 object.setId(resultat.getInt("id"));
+                object.setAcronym(resultat.getString("acronym"));
                 object.setName(resultat.getString("name").toUpperCase());
 
                 platformsList.add(object);

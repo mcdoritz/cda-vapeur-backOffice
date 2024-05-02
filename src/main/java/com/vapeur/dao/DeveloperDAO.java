@@ -15,9 +15,10 @@ import static com.vapeur.config.Debug.*;
 
 public class DeveloperDAO {
 
-    public void save(Developer object) {
+    public Boolean save(Developer object) {
         try {
             if (object.getId() != 0) {
+            	prln("update developer");
                 String query = "UPDATE developers SET name = ?, creation_date = ?, country = ?, url_instagram = ?, url_x = ?, url_facebook = ?, url_website = ? WHERE id = ?";
                 
                 try (PreparedStatement ps = Database.connexion.prepareStatement(query)) {
@@ -31,10 +32,14 @@ public class DeveloperDAO {
                     ps.setInt(8, object.getId());
 
                     ps.executeUpdate();
+                    
+                    
                 }
                 String objectInfos = "Developer ID: " + object.getId();
                 bddSays("update", true, object.getId(), objectInfos);
+                return true;
             } else {
+            	prln("insert developer");
                 String query = "INSERT INTO developers (name, creation_date, country, url_instagram, url_x, url_facebook, url_website) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 
                 try (PreparedStatement ps = Database.connexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -57,10 +62,12 @@ public class DeveloperDAO {
                             throw new SQLException("L'insertion a échoué, aucun ID généré n'a été récupéré.");
                         }
                     }
+                    return true;
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            return false;
         }
     }
 

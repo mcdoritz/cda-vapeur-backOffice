@@ -7,8 +7,7 @@
 					<tr>
 						<th class="border-top-0">Nom</th>
 						<th class="border-top-0">Acronyme</th>
-						<th class="border-top-0"></th>
-						<th class="border-top-0"></th>
+						<th class="border-top-0">Modifier</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -17,7 +16,6 @@
 							<td><span class="ml-2"><c:out value="${platform.name }"></c:out></span></td>
 							<td><span class="ml-2"><c:out value="${platform.acronym }"></c:out></span></td>
 							<td><a href="platformDetails?id=${platform.id }"><span class="ml-2">[ <i class="fa-solid fa-pen"></i> ]</span></a></td>
-							<td><a href="platformDelete?id=${platform.id }"><span class="ml-2">[ <i class="fa-solid fa-box-archive"></i> / <i class="fa-solid fa-trash-can"></i> ]</span></a></td>
 						</tr>
 					</c:forEach>
 				</tbody>
