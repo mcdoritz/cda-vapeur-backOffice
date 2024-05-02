@@ -180,6 +180,22 @@ public class GameDAO {
 			ex.printStackTrace();
 		}
 	}
+	
+	public void updateArchive(int game_id, Boolean archived) {
+		try {
+			if (archived != null && game_id != 0) {		
+
+				try (PreparedStatement ps = Database.connexion.prepareStatement("UPDATE games SET archived = ? WHERE id = ?")) {
+					ps.setBoolean(1, archived);
+					ps.setInt(2, game_id);
+					ps.executeUpdate();
+				}
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
 	// Tout prendre
 	public Game getById(int game_id) {
@@ -247,8 +263,25 @@ public class GameDAO {
 
 	// Sers à lister les jeux, inutile de tout prendre donc.
 	public GameResults readAll(int page, ArrayList<Integer> genres_id, ArrayList<Integer> modes_id,
-			ArrayList<Integer> languages_id, ArrayList<Integer> platforms_id, ArrayList<Integer> developers_id) {
+			ArrayList<Integer> languages_id, ArrayList<Integer> platforms_id, ArrayList<Integer> developers_id, Boolean archived) {
 		ArrayList<Game> gamesList = new ArrayList<>();
+		
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
+		
+		prln("jeux archived :" + archived);
+		
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
+		prln("***************************************");
 
 		int min;
 		if (page > - 1 && page < 2) {
@@ -351,7 +384,7 @@ public class GameDAO {
 			
 			prln("queryjoins : " + queryJoins);
 			prln("queryConditions : " + queryConditions);
-			query += queryJoins + " WHERE stock > 0" + queryConditions + " ORDER BY games.title ASC ";
+			query += queryJoins + " WHERE stock > 0" + queryConditions + " AND archived = ? ORDER BY games.title ASC ";
 			
 			if(page != -1) {
 				query += " LIMIT ?,?";			
@@ -403,10 +436,15 @@ public class GameDAO {
 			}
 			
 			if(page != -1) {
-				ps.setInt(index, min);
-				ps.setInt(index+1, limitPerPage);
+				ps.setBoolean(index, archived);
+				ps.setInt(index+1, min);
+				ps.setInt(index+2, limitPerPage);
+				
+			}else {
+				ps.setBoolean(index, archived);
 			}
 			
+			prln(ps.toString());
 			ResultSet resultat = ps.executeQuery();
 
 			PlatformDAO platformdao = new PlatformDAO();
@@ -428,7 +466,7 @@ public class GameDAO {
 			// S'il y a autant que 12 résultats dans la recherche, alors voir s'il y en a plus :
 			if(gamesList.size() <= limitPerPage) {
 				prln("gamesList.size <= limitPerpage");
-				totalResults = countAll(queryCount, genres_id, modes_id, languages_id, platforms_id, developers_id);
+				totalResults = countAll(queryCount, genres_id, modes_id, languages_id, platforms_id, developers_id, archived);
 			}else {
 				prln("gamesList.size != limitPerpage");
 				totalResults = gamesList.size();
@@ -767,16 +805,18 @@ public class GameDAO {
 	}
 
 	public int countAll(String query, ArrayList<Integer> genres_id, ArrayList<Integer> modes_id,
-			ArrayList<Integer> languages_id, ArrayList<Integer> platforms_id, ArrayList<Integer> developers_id) {
+			ArrayList<Integer> languages_id, ArrayList<Integer> platforms_id, ArrayList<Integer> developers_id, Boolean archived) {
 		try {
 			// Pour la sélection au hasard pour la landing page :
 			if(query == "all") {
-				query =  "SELECT COUNT(*) AS total FROM games WHERE stock > 0";
+				query =  "SELECT COUNT(*) AS total FROM games WHERE stock > 0 AND archived = ?";
+			}else {
+				query +=  " AND archived = ?";
 			}
 			
 			prln("countALL QUERY : " + query);
-			PreparedStatement ps = Database.connexion
-					.prepareStatement(query);
+			PreparedStatement ps = Database.connexion.prepareStatement(query);
+			ps.setBoolean(1, archived);
 			
 			int index = 1;
 			
@@ -911,7 +951,7 @@ public class GameDAO {
 			ArrayList<Object> list = new ArrayList<>();
 
 			// Game
-			list.add(getNameAndIdById(dé.nextInt(countAll("all", null, null, null, null, null) - 1) + 1));
+			list.add(getNameAndIdById(dé.nextInt(countAll("all", null, null, null, null, null, false) - 1) + 1));
 
 			// Genre
 			list.add(genredao.getNameAndIdById(dé.nextInt(genredao.countAll() - 1) + 1));

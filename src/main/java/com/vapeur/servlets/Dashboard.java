@@ -34,6 +34,7 @@ public class Dashboard extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+		request.setCharacterEncoding("UTF-8");
 
 		// Vérif 404 -------------
 		String requestURI = request.getRequestURI();
@@ -70,6 +71,7 @@ public class Dashboard extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+		request.setCharacterEncoding("UTF-8");
 		doGet(request, response);
 	}
 

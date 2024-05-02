@@ -315,9 +315,9 @@ public class Game implements Serializable {
 				+ ", requires3rdPartyAccount=" + requires3rdPartyAccount + ", stock=" + stock + ", tags=" + tags
 				+ ", developerId=" + developerId + ", developer=" + developer + ", genres=" + genres + ", modes="
 				+ modes + ", platformId=" + platformId + ", platform=" + platform + ", videos=" + videos
-				+ ", languages=" + languages + "]";
+				+ ", languages=" + languages + ", comments=" + comments + ", comment=" + comment
+				+ ", notApprovedComments=" + notApprovedComments + ", gameLanguages=" + gameLanguages + ", archived="
+				+ archived + "]";
 	}
-
-	
 
 }

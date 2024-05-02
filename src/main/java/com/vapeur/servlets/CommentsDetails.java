@@ -52,6 +52,7 @@ public class CommentsDetails extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+		request.setCharacterEncoding("UTF-8");
 
 		try {
 			if(checkAdmin(session)) {

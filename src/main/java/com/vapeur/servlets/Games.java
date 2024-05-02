@@ -36,6 +36,17 @@ public class Games extends HttpServlet {
 		
 		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+		request.setCharacterEncoding("UTF-8");
+		
+		if(request.getParameter("action") != null) {
+			if(request.getParameter("action").equals("desarchivedOk")) {
+				request.setAttribute("infoMsg", "Jeu désarchivé !");
+			}else if(request.getParameter("action").equals("archivedOk")){
+				request.setAttribute("infoMsg", "Jeu archivé !");
+			}else if(request.getParameter("action").equals("archivedKo")){
+				request.setAttribute("errorMsg", "Erreur avec l'archivage du jeu");
+			}
+		}
 
 		try {
 			if(checkAdmin(session)) {
@@ -56,6 +67,7 @@ public class Games extends HttpServlet {
 					prln("jeux archivés");
 					GameResults gameresults = gamedao.adminReadAll(true);
 					if(gameresults.getTotalResults() != 0) {
+						request.setAttribute("archive", true);
 						request.setAttribute("totalGames", gameresults.getTotalResults());
 						request.setAttribute("gamesList", gameresults.getGames());
 					}else {
@@ -90,6 +102,7 @@ public class Games extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+		request.setCharacterEncoding("UTF-8");
 		doGet(request, response);
 	}
 

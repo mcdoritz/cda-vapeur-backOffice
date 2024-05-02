@@ -52,6 +52,7 @@ public class GameDetails extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+		request.setCharacterEncoding("UTF-8");
 
 		try {
 			if(checkAdmin(session)) {
@@ -79,63 +80,85 @@ public class GameDetails extends HttpServlet {
 					
 					int game_id = Integer.valueOf(request.getParameter("id"));
 					GameDAO gamedao = new GameDAO();
-
 					Game game = new Game();
-					
-					List<Language> gameLanguages = languagedao.readAllByGameId(game_id);
-					ArrayList<Boolean> interfaceSupport = new ArrayList<>();
-					ArrayList<Boolean> audioSupport = new ArrayList<>();
-					ArrayList<Boolean> subtitlesSupport = new ArrayList<>();
-					ArrayList<Integer> languageId = new ArrayList<>();
-					ArrayList<String> languageName = new ArrayList<>();
-					
-					for(Language l:gameLanguages) {
-						prln("id : " + l.getId() + " " + l.getLanguage() + " : " + l.isInterfaceSupport() + " " + l.isFullAudioSupport() + " " + l.isSubtitles());
-						
-						
-						languageId.add(l.getId());
-						languageName.add(l.getLanguage());
-						interfaceSupport.add(l.isInterfaceSupport());
-						audioSupport.add(l.isFullAudioSupport());
-						subtitlesSupport.add(l.isSubtitles());
-					
-					}
 					game = gamedao.getById(game_id);
 					
-					for(Language l:game.getLanguages()) {
-						prln(l.getLanguage());
-					}
-					
-					for(String l:languageName) {
-						prln(l);
-					}
-					
-					for(int i:languageId) {
-						prln(i);
-					}
-					
-					for(Boolean b:interfaceSupport) {
-						prln(b);
-					}
+					if(request.getParameter("action") != null && request.getParameter("action").equals("archive")) {
+						Boolean archived = null;
+						if(game.getArchived() == true) {
+							archived = false;
+							response.sendRedirect("games?list&action=desarchivedOk");
+						}else {
+							archived = true;
+							response.sendRedirect("games?list&action=archivedOk");
+						}
+						try {
+							gamedao.updateArchive(game_id, archived);
+						} catch (Exception e) {
+							response.sendRedirect("games?list&action=archivedKo");
+							e.printStackTrace();
+						}
 						
-					if(game.getTitle() != null) {
-						
-						request.setAttribute("languageName", languageName);
-						request.setAttribute("languageId", languageId);
-						request.setAttribute("audioSupport", audioSupport);
-						request.setAttribute("interfaceSupport", interfaceSupport);
-						request.setAttribute("subtitlesSupport", subtitlesSupport);
-						request.setAttribute("gameLanguages", gameLanguages );
-						request.setAttribute("game", game );
-						request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un jeu" );
-					}else {
-						request.setAttribute("errorMsg", "Erreur, pas de jeu trouvé." );
-					}
-				}else {
-					request.setAttribute("pageTitle", "Vapeur.Admin : Ajout d'un jeu" );
-				}
 
-				request.getRequestDispatcher("WEB-INF/app/gameDetails.jsp").forward(request, response);
+					}else{
+						
+						
+						request.setAttribute("pageTitle", "Vapeur.Admin : Modification ou ajout d'un jeu" );
+
+						List<Language> gameLanguages = languagedao.readAllByGameId(game_id);
+						ArrayList<Boolean> interfaceSupport = new ArrayList<>();
+						ArrayList<Boolean> audioSupport = new ArrayList<>();
+						ArrayList<Boolean> subtitlesSupport = new ArrayList<>();
+						ArrayList<Integer> languageId = new ArrayList<>();
+						ArrayList<String> languageName = new ArrayList<>();
+						
+						for(Language l:gameLanguages) {
+							prln("id : " + l.getId() + " " + l.getLanguage() + " : " + l.isInterfaceSupport() + " " + l.isFullAudioSupport() + " " + l.isSubtitles());
+							
+							
+							languageId.add(l.getId());
+							languageName.add(l.getLanguage());
+							interfaceSupport.add(l.isInterfaceSupport());
+							audioSupport.add(l.isFullAudioSupport());
+							subtitlesSupport.add(l.isSubtitles());
+						
+						}
+						
+						
+						for(Language l:game.getLanguages()) {
+							prln(l.getLanguage());
+						}
+						
+						for(String l:languageName) {
+							prln(l);
+						}
+						
+						for(int i:languageId) {
+							prln(i);
+						}
+						
+						for(Boolean b:interfaceSupport) {
+							prln(b);
+						}
+							
+						if(game.getTitle() != null) {
+							
+							request.setAttribute("languageName", languageName);
+							request.setAttribute("languageId", languageId);
+							request.setAttribute("audioSupport", audioSupport);
+							request.setAttribute("interfaceSupport", interfaceSupport);
+							request.setAttribute("subtitlesSupport", subtitlesSupport);
+							request.setAttribute("gameLanguages", gameLanguages );
+							request.setAttribute("game", game );
+							request.setAttribute("pageTitle", "Vapeur.Admin : Modification d'un jeu" );
+						}else {
+							request.setAttribute("errorMsg", "Erreur, pas de jeu trouvé." );
+						}
+						
+						request.getRequestDispatcher("WEB-INF/app/gameDetails.jsp").forward(request, response);
+					}
+
+				}
 			}else {
 				response.sendRedirect("login");
 			}
@@ -153,6 +176,7 @@ public class GameDetails extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		request.setAttribute("notifs", MajCommentsToApprove.returnCount());
+		request.setCharacterEncoding("UTF-8");
 		try {
 			if(checkAdmin(session)) {
 				prln("servlet gameDetail Post : admin loggué");

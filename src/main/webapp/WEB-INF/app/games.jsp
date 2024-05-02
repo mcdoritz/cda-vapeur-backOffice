@@ -12,7 +12,7 @@
 						<th class="border-top-0">D&#xE9;veloppeur</th>
 						<th class="border-top-0">Stock</th>
 						<th class="border-top-0">Modifier</th>
-						<th class="border-top-0">Arch.Suppr.</th>
+						<th class="border-top-0"><c:if test="${archive == true }">D&#xE9;sarchiver</c:if><c:if test="${archive == false || archive == null }">Archiver</c:if></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -31,9 +31,9 @@
 							<td><a href="gameDetails?id=${game.id }"><span
 									class="ml-2">[ <i class="fa-solid fa-pen"></i> ]
 								</span></a></td>
-							<td><a href="gameDelete?id=${game.id }"><span
-									class="ml-2">[ <i class="fa-solid fa-box-archive"></i> /
-										<i class="fa-solid fa-trash-can"></i> ]
+							<td><a href="gameDetails?id=${game.id }&action=archive"><span
+									class="ml-2">[ <c:if test="${archive == true }"> <i class="fa-solid fa-arrow-up-from-bracket"></i></c:if> 
+									<c:if test="${archive == false || archive == null }"> <i class="fa-solid fa-box-archive"></i> </c:if> ]
 								</span></a></td>
 						</tr>
 
