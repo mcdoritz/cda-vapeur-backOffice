@@ -44,9 +44,10 @@ public class GameDAO {
 			
 
 			if (object.getId() != 0) {
-				String query = "UPDATE games SET title = ?, description = ?, classification = ?, price = ?, release_date = ?, users_avg_score = ?, total_reviews = ?, controller_support = ?, requires_3rd_party_account = ?, stock = ?, tags = ?, developer_id = ?, platform_id = ?, archived = ? WHERE id = ?";
+				String query = "UPDATE games SET title = ?, description = ?, classification = ?, price = ?, release_date = ?, users_avg_score = ?, total_reviews = ?, controller_support = ?, requires_3rd_party_account = ?, stock = ?, tags = ?, developer_id = ?, platform_id = ?, status = ? WHERE id = ?";
 
 				try {
+					prln("UPDATE *********************************** STATUT : " + object.getStatus());
 					PreparedStatement ps = Database.connexion.prepareStatement(query);
 					ps.setString(1, object.getTitle());
 					ps.setString(2, object.getDescription());
@@ -61,7 +62,7 @@ public class GameDAO {
 					ps.setString(11, tags);
 					ps.setInt(12, object.getDeveloperId());
 					ps.setInt(13, object.getPlatformId());
-					ps.setBoolean(14, object.getArchived());
+					ps.setByte(14, object.getStatus());
 					ps.setInt(15, object.getId());
 					
 					GenreDAO genredao = new GenreDAO();
@@ -213,12 +214,12 @@ public class GameDAO {
 		}
 	}
 	
-	public void updateArchive(int game_id, Boolean archived) {
+	public void updateArchive(int game_id, byte status) {
 		try {
-			if (archived != null && game_id != 0) {		
+			if (status != -1 && game_id != 0) {		
 
-				try (PreparedStatement ps = Database.connexion.prepareStatement("UPDATE games SET archived = ? WHERE id = ?")) {
-					ps.setBoolean(1, archived);
+				try (PreparedStatement ps = Database.connexion.prepareStatement("UPDATE games SET status = ? WHERE id = ?")) {
+					ps.setByte(1, status);
 					ps.setInt(2, game_id);
 					ps.executeUpdate();
 				}
@@ -234,7 +235,7 @@ public class GameDAO {
 		try {
 
 			PreparedStatement ps = Database.connexion.prepareStatement(
-					"SELECT games.id, title, description, classification, price, release_date, users_avg_score, controller_support, requires_3rd_party_account, total_reviews, stock, tags, developer_id, archived, platforms.id AS platform_id, platforms.name AS platform_name, platforms.acronym AS platform_acronym FROM games JOIN platforms ON games.platform_id = platforms.id  JOIN developers ON games.developer_id = developers.id WHERE games.id = ?;");
+					"SELECT games.id, title, description, classification, price, release_date, users_avg_score, controller_support, requires_3rd_party_account, total_reviews, stock, tags, developer_id, status, platforms.id AS platform_id, platforms.name AS platform_name, platforms.acronym AS platform_acronym FROM games JOIN platforms ON games.platform_id = platforms.id  JOIN developers ON games.developer_id = developers.id WHERE games.id = ?;");
 			ps.setInt(1, game_id);
 			ResultSet resultat = ps.executeQuery();
 			Game object = new Game();
@@ -258,7 +259,7 @@ public class GameDAO {
 				object.setControllerSupport(resultat.getBoolean("controller_support"));
 				object.setRequires3rdPartyAccount(resultat.getBoolean("requires_3rd_party_account"));
 				object.setStock(resultat.getInt("stock"));
-				object.setArchived(resultat.getBoolean("archived"));
+				object.setStatus(resultat.getByte("status"));
 
 				String tags = resultat.getString("tags");
 				String[] arrayTags = tags.split(" ");
@@ -295,7 +296,7 @@ public class GameDAO {
 
 	// Sers à lister les jeux, inutile de tout prendre donc.
 	public GameResults readAll(int page, ArrayList<Integer> genres_id, ArrayList<Integer> modes_id,
-			ArrayList<Integer> languages_id, ArrayList<Integer> platforms_id, ArrayList<Integer> developers_id, Boolean archived) {
+			ArrayList<Integer> languages_id, ArrayList<Integer> platforms_id, ArrayList<Integer> developers_id, byte status) {
 		ArrayList<Game> gamesList = new ArrayList<>();
 		
 		prln("***************************************");
@@ -305,7 +306,7 @@ public class GameDAO {
 		prln("***************************************");
 		prln("***************************************");
 		
-		prln("jeux archived :" + archived);
+		prln("jeux status :" + status);
 		
 		prln("***************************************");
 		prln("***************************************");
@@ -348,8 +349,6 @@ public class GameDAO {
 			        queryConditions += " ) ";
 			    }
 			}
-			
-			
 			
 			index = 0;
 			if(modes_id != null) {
@@ -416,7 +415,7 @@ public class GameDAO {
 			
 			prln("queryjoins : " + queryJoins);
 			prln("queryConditions : " + queryConditions);
-			query += queryJoins + " WHERE stock > 0" + queryConditions + " AND archived = ? ORDER BY games.title ASC ";
+			query += queryJoins + " WHERE stock > 0" + queryConditions + " AND status = ? ORDER BY games.title ASC ";
 			
 			if(page != -1) {
 				query += " LIMIT ?,?";			
@@ -468,12 +467,12 @@ public class GameDAO {
 			}
 			
 			if(page != -1) {
-				ps.setBoolean(index, archived);
+				ps.setByte(index, status);
 				ps.setInt(index+1, min);
 				ps.setInt(index+2, limitPerPage);
 				
 			}else {
-				ps.setBoolean(index, archived);
+				ps.setByte(index, status);
 			}
 			
 			prln(ps.toString());
@@ -498,7 +497,7 @@ public class GameDAO {
 			// S'il y a autant que 12 résultats dans la recherche, alors voir s'il y en a plus :
 			if(gamesList.size() <= limitPerPage) {
 				prln("gamesList.size <= limitPerpage");
-				totalResults = countAll(queryCount, genres_id, modes_id, languages_id, platforms_id, developers_id, archived);
+				totalResults = countAll(queryCount, genres_id, modes_id, languages_id, platforms_id, developers_id, status);
 			}else {
 				prln("gamesList.size != limitPerpage");
 				totalResults = gamesList.size();
@@ -516,15 +515,15 @@ public class GameDAO {
 	}
 	
 	// Sers à lister les jeux, inutile de tout prendre donc.
-			public GameResults adminReadAll(Boolean archived) {
+			public GameResults adminReadAll(byte status) {
 				
 				try {
 				ArrayList<Game> gamesList = new ArrayList<>();
 				
-				String query = "SELECT DISTINCT games.id, title, price, release_date, users_avg_score, total_reviews, stock, developer_id, platform_id FROM games WHERE archived = ?";
+				String query = "SELECT DISTINCT games.id, title, price, release_date, users_avg_score, total_reviews, stock, developer_id, platform_id FROM games WHERE status = ?";
 				
 				PreparedStatement ps = Database.connexion.prepareStatement(query);
-				ps.setBoolean(1, archived);
+				ps.setByte(1, status);
 					
 				ResultSet resultat = ps.executeQuery();
 
@@ -596,7 +595,7 @@ public class GameDAO {
 			queryConditions += " ) ";
 			prln(queryConditions);
 
-			query += queryJoins + " WHERE stock > 0" + queryConditions + " AND archived = false ORDER BY RAND()";			
+			query += queryJoins + " WHERE stock > 0" + queryConditions + " AND status = false ORDER BY RAND()";			
 
 			prln(query);
 
@@ -821,7 +820,7 @@ public class GameDAO {
 	public Game getNameAndIdById(int id) {
 		try {
 
-			PreparedStatement ps = Database.connexion.prepareStatement("SELECT title FROM games WHERE id = ? AND archived = false");
+			PreparedStatement ps = Database.connexion.prepareStatement("SELECT title FROM games WHERE id = ? AND status = false");
 			ps.setInt(1, id);
 			ResultSet resultat = ps.executeQuery();
 			Game object = new Game();
@@ -837,18 +836,18 @@ public class GameDAO {
 	}
 
 	public int countAll(String query, ArrayList<Integer> genres_id, ArrayList<Integer> modes_id,
-			ArrayList<Integer> languages_id, ArrayList<Integer> platforms_id, ArrayList<Integer> developers_id, Boolean archived) {
+			ArrayList<Integer> languages_id, ArrayList<Integer> platforms_id, ArrayList<Integer> developers_id, byte status) {
 		try {
 			// Pour la sélection au hasard pour la landing page :
 			if(query == "all") {
-				query =  "SELECT COUNT(*) AS total FROM games WHERE stock > 0 AND archived = ?";
+				query =  "SELECT COUNT(*) AS total FROM games WHERE stock > 0 AND status = ?";
 			}else {
-				query +=  " AND archived = ?";
+				query +=  " AND status = ?";
 			}
 			
 			prln("countALL QUERY : " + query);
 			PreparedStatement ps = Database.connexion.prepareStatement(query);
-			ps.setBoolean(1, archived);
+			ps.setByte(1, status);
 			
 			int index = 1;
 			
@@ -983,7 +982,7 @@ public class GameDAO {
 			ArrayList<Object> list = new ArrayList<>();
 
 			// Game
-			list.add(getNameAndIdById(dé.nextInt(countAll("all", null, null, null, null, null, false) - 1) + 1));
+			list.add(getNameAndIdById(dé.nextInt(countAll("all", null, null, null, null, null, (byte)2) - 1) + 1));
 
 			// Genre
 			list.add(genredao.getNameAndIdById(dé.nextInt(genredao.countAll() - 1) + 1));

@@ -17,7 +17,7 @@
 				</thead>
 				<tbody>
 					<c:forEach items="${gamesList }" var="game">
-						<tr>
+						<tr <c:if test="${game.stock == 0 }">style="background-color:#ffa4a4; font-weight:bold"</c:if>>
 							<td><span class="ml-2"><c:out value="${game.title }"></c:out></span></td>
 							<td><a href="platformDetail?id=${game.id }"><span
 									class="ml-2"><c:out value="${game.platform.acronym }"></c:out></span></a></td>
@@ -27,7 +27,7 @@
 										value="${game.releaseDate }"></c:out></span></td>
 							<td><a href="developerDetails?id=${game.developer.id }"><span
 									class="ml-2"><c:out value="${game.developer.name }"></c:out></span></a></td>
-							<td><span class="ml-2"><c:out value="${game.stock }"></c:out></span></td>
+							<td <c:if test="${game.stock == 0 }">style="color:red;"</c:if>><span class="ml-2" ><c:out value="${game.stock }"></c:out></span></td>
 							<td><a href="gameDetails?id=${game.id }"><span
 									class="ml-2">[ <i class="fa-solid fa-pen"></i> ]
 								</span></a></td>

@@ -1,21 +1,21 @@
 package com.vapeur.dao;
 
 import static com.vapeur.config.Debug.bddSays;
+import static com.vapeur.config.Debug.prln;
 
-import java.sql.Timestamp;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.vapeur.beans.Order;
 import com.vapeur.beans.OrderDetail;
+import com.vapeur.beans.User;
 import com.vapeur.config.Database;
-import static com.vapeur.config.Debug.*;
 
 public class OrderDAO {
 
@@ -92,17 +92,23 @@ public class OrderDAO {
     
     public List<Order> readAll() {
         ArrayList<Order> ordersList = new ArrayList<>();
-        String query = "SELECT * FROM orders";
+        String query = "SELECT orders.id, orders.date, orders.user_id, SUM(order_details.quantity) AS quantity, ROUND(SUM(order_details.unit_price*order_details.quantity),2) AS amount FROM orders JOIN order_details ON orders.id = order_details.order_id GROUP BY orders.id ORDER BY orders.date DESC";
         try {
             PreparedStatement ps = Database.connexion.prepareStatement(query);
             ResultSet resultat = ps.executeQuery();
+            
+            UserDAO userdao = new UserDAO();
 
             while (resultat.next()) {
                 Order object = new Order();
-
+                
                 object.setId(resultat.getInt("id"));
                 object.setDate(resultat.getDate("date"));
                 object.setUserId(resultat.getInt("user_id"));
+                //Utilisation de name pour afficher le nom du user
+                object.setName(userdao.getById(resultat.getInt("user_id")).getNickname());
+                object.setTotalQuantity(resultat.getInt("quantity"));
+                object.setAmount(resultat.getFloat("amount"));
 
                 ordersList.add(object);
             }

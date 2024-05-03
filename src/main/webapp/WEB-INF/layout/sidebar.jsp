@@ -20,14 +20,19 @@
 							class="menu-arrow"></span>
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
-							<li><a href="games?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;En vente</a></li>
-							<li><a href="games?archived"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Archivés</a></li>
-							<li><a href="gameDetails?id=0"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
+							<li><a href="games?list"><i class="fa-solid fa-shop"></i>&nbsp;&nbsp;En vente</a></li>
+							<li><a href="games?waiting"><i class="fa-solid fa-hourglass-half"></i>&nbsp;&nbsp;En attente</a></li>
+							<li><a href="games?archived"><i class="fa-solid fa-box-archive"></i>&nbsp;&nbsp;Archivés</a></li>
+							<li><a href="gameDetails?id=0"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
 					<li class="mm-active"><a href="users" class="active">
 							<i class="fa-solid fa-user"></i><span> Utilisateurs </span>
+					</a></li>
+					
+					<li class="mm-active"><a href="orders" class="active">
+							<i class="fa-solid fa-cash-register"></i><span> Commandes </span>
 					</a></li>
 					
 					<li class="mm-active"><a href="comments" class="active">
@@ -40,7 +45,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="developers?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
-							<li><a href="developerDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
+							<li><a href="developerDetails"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
@@ -49,7 +54,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="platforms?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
-							<li><a href="platformDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
+							<li><a href="platformDetails"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
@@ -58,7 +63,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="genres?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
-							<li><a href="genreDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
+							<li><a href="genreDetails"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
@@ -67,7 +72,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="modes?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
-							<li><a href="modeDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter</a></li>
+							<li><a href="modeDetails"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Ajouter</a></li>
 						</ul>
 					</li>
 					
@@ -76,7 +81,7 @@
 					</a>
 						<ul class="nav-second-level mm-collapse" aria-expanded="false">
 							<li><a href="admins?list"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Lister</a></li>
-							<li><a href="adminDetails"><i class="fa-solid fa-circle-dot"></i>&nbsp;&nbsp;Ajouter/Modifier</a></li>
+							<li><a href="adminDetails"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Ajouter/Modifier</a></li>
 						</ul>
 					</li>
 

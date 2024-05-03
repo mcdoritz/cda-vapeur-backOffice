@@ -51,6 +51,8 @@ public class Games extends HttpServlet {
 				request.setAttribute("infoMsg", "Jeu enregistré !");
 			}else if(request.getParameter("action").equals("saveKo")){
 				request.setAttribute("errorMsg", "Erreur, jeu non enregistré !");
+			}else if(request.getParameter("action").equals("addOk")){
+				request.setAttribute("infoMsg", "Jeu ajouté ! Retrouvez le dans la liste \"en attente \" pour y ajouter photos et vidéos !");
 			}
 		}
 
@@ -62,7 +64,7 @@ public class Games extends HttpServlet {
 				
 				if(request.getParameter("list") != null) {
 					prln("jeux en ventes");
-					GameResults gameresults = gamedao.adminReadAll(false);
+					GameResults gameresults = gamedao.adminReadAll((byte)2);
 					if(gameresults.getTotalResults() != 0) {
 						request.setAttribute("totalGames", gameresults.getTotalResults());
 						request.setAttribute("gamesList", gameresults.getGames());
@@ -72,9 +74,20 @@ public class Games extends HttpServlet {
 				}else if (request.getParameter("archived") != null) {
 					prln("jeux archivés");
 					statusDesJeux = " archivés";
-					GameResults gameresults = gamedao.adminReadAll(true);
+					GameResults gameresults = gamedao.adminReadAll((byte)0);
 					if(gameresults.getTotalResults() != 0) {
 						request.setAttribute("archive", true);
+						request.setAttribute("totalGames", gameresults.getTotalResults());
+						request.setAttribute("gamesList", gameresults.getGames());
+					}else {
+						request.setAttribute("infoMsg", "Aucun jeu trouvé");
+					}
+					
+				}else if (request.getParameter("waiting") != null) {
+					prln("jeux en attente");
+					statusDesJeux = " en attente";
+					GameResults gameresults = gamedao.adminReadAll((byte)1);
+					if(gameresults.getTotalResults() != 0) {
 						request.setAttribute("totalGames", gameresults.getTotalResults());
 						request.setAttribute("gamesList", gameresults.getGames());
 					}else {

@@ -84,16 +84,16 @@ public class GameDetails extends HttpServlet {
 					game = gamedao.getById(game_id);
 					
 					if(request.getParameter("action") != null && request.getParameter("action").equals("archive")) {
-						Boolean archived = null;
-						if(game.getArchived() == true) {
-							archived = false;
+						Byte status = null;
+						if(game.getStatus() == 0) {
+							status = 2;
 							response.sendRedirect("games?list&action=desarchivedOk");
 						}else {
-							archived = true;
+							status = 0;
 							response.sendRedirect("games?list&action=archivedOk");
 						}
 						try {
-							gamedao.updateArchive(game_id, archived);
+							gamedao.updateArchive(game_id, status);
 						} catch (Exception e) {
 							response.sendRedirect("games?list&action=archivedKo");
 							e.printStackTrace();
@@ -225,10 +225,10 @@ public class GameDetails extends HttpServlet {
 			    	game.setDeveloperId(Integer.valueOf(request.getParameter("developer")));
 			    	game.setPlatformId(Integer.valueOf(request.getParameter("platform")));
 
-			    	if(request.getParameter("archived") != null) {
-			    		game.setArchived(true);
+			    	if(request.getParameter("status") != null) {
+			    		game.setStatus(Byte.valueOf(request.getParameter("status")));
 			    	}else {
-			    		game.setArchived(false);
+			    		game.setStatus(Byte.valueOf((byte) 1));
 			    	}
 			    	
 			    	
@@ -303,7 +303,12 @@ public class GameDetails extends HttpServlet {
 			    	
 			    	
 			    	if(gamedao.save(game)) {
-						response.sendRedirect("games?list&action=saveOk");
+			    		if(game.getId() == 0) {
+			    			response.sendRedirect("games?list&action=addOk");
+			    		}else {
+			    			response.sendRedirect("games?list&action=saveOk");
+			    		}
+						
 					}else {
 						response.sendRedirect("games?list&action=saveKo");
 					}

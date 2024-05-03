@@ -78,7 +78,7 @@
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label">Développeur</label>
 						<div class="col-sm-10">
-							<select class="form-control" name="developer">
+							<select class="form-control" name="developer" required>
 							<c:forEach items="${developers }" var="developer">
 								<option value="${developer.id }"><c:out value="${developer.name }"/></option>
 							</c:forEach>
@@ -89,7 +89,7 @@
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label">Plateforme</label>
 						<div class="col-sm-10">
-							<select class="form-control" name="platform">
+							<select class="form-control" name="platform" required>
 							<c:forEach items="${platforms }" var="platform">
 								<option value="${platform.id }"><c:out value="${platform.name }"/></option>
 							</c:forEach>
@@ -101,7 +101,7 @@
 						<label class="col-sm-2 col-form-label">Genres</label>
 						<div class="col-sm-10">
 							<h6>Multiple select</h6>
-							<select multiple class="form-control" name="genres">
+							<select multiple class="form-control" name="genres" required>
 							<c:forEach items="${genres }" var="genre">
 								<option value="${genre.id}" <c:if test="${fn:contains(game.genres, genre.id)}">selected</c:if>><c:out value="${genre.name}" /></option>
 							</c:forEach>
@@ -113,7 +113,7 @@
 						<label class="col-sm-2 col-form-label">Modes</label>
 						<div class="col-sm-10">
 							<h6>Multiple select</h6>
-							<select multiple class="form-control" name="modes">
+							<select multiple class="form-control" name="modes" required>
 							<c:forEach items="${modes }" var="mode">
 								<option value="${mode.id}" <c:if test="${fn:contains(game.modes, mode.id)}">selected</c:if>><c:out value="${mode.name}" /></option>
 							</c:forEach>
@@ -125,7 +125,7 @@
 						<label class="col-sm-2 col-form-label">Langues interface</label>
 						<div class="col-sm-10">
 							<h6>Interface</h6>
-							<select multiple class="form-control" name="interface-support">
+							<select multiple class="form-control" name="interface-support" required>
 							<c:forEach items="${languages }" var="langue" varStatus="i" begin="0">
 								<option value="${langue.id }" <c:if test="${interfaceSupport[i.count-1] }">selected</c:if>><c:out value="${langue.language }" /></option>	
 							</c:forEach>
@@ -134,7 +134,7 @@
 						<label class="col-sm-2 col-form-label">Langues Audio</label>
 						<div class="col-sm-10">
 							<h6>Audio</h6>
-							<select multiple class="form-control" name="full-audio-support">
+							<select multiple class="form-control" name="full-audio-support" required>
 							<c:forEach items="${languages }" var="langue" varStatus="i" begin="0">
 								<option value="${langue.id }" <c:if test="${audioSupport[i.count-1] }">selected</c:if>><c:out value="${langue.language }" /></option>	
 							</c:forEach>
@@ -143,20 +143,29 @@
 						<label class="col-sm-2 col-form-label">Langues sous-titres</label>
 						<div class="col-sm-10">
 							<h6>Sous-titres</h6>
-							<select multiple class="form-control" name="subtitles-support">
+							<select multiple class="form-control" name="subtitles-support" required>
 							<c:forEach items="${languages }" var="langue" varStatus="i" begin="0">
 								<option value="${langue.id }" <c:if test="${subtitlesSupport[i.count-1] }">selected</c:if>><c:out value="${langue.language }" /></option>	
 							</c:forEach>
 							</select>
 						</div>
 					</div>
-					<div class="form-group row">
-						<div class="custom-control custom-checkbox">
-							<label for="archived">Archiver ?</label>
-		                    <input type="checkbox" id="archived" name="archived" <c:out value="${game.archived == true ? 'checked' : '' }"/>>
-		                    
-		                </div>
-					</div>
+					<c:if test="${game.id != null }">
+						<div class="form-group row">		                
+			                <div class="custom-control custom-radio">
+			               		<label for="customRadio1">En vente</label>
+	                            <input type="radio" id="customRadio1" name="status" <c:out value="${game.status == 2 ? 'checked' : '' }"/> value="2">
+	                            <br>
+	                            <label for="customRadio2">En attente</label>
+	                            <input type="radio" id="customRadio2" name="status" <c:out value="${game.status == 1 ? 'checked' : '' }"/> value="1">
+	                            <br>
+	                            <label for="customRadio3">Archivé</label>
+	                            <input type="radio" id="customRadio3" name="status" <c:out value="${game.status == 0 ? 'checked' : '' }"/> value="0">
+	                            <br>
+	                            
+	                        </div>
+						</div>
+					</c:if>
 	
 					<div class="form-group row mb-0">
 	                    <div class="col-sm-8 offset-sm-4">
