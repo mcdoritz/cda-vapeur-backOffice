@@ -19,7 +19,8 @@
         <!-- DataTables -->
         <link href="assets/libs/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
         <link href="assets/libs/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
-        
+        <!-- Plugins css -->
+        <link href="assets/libs/dropzone/dropzone.min.css" rel="stylesheet" type="text/css" />
 
         
         <!-- Summernote css -->
