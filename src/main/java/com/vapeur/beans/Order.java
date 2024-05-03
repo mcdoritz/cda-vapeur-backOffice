@@ -14,12 +14,13 @@ public class Order implements Serializable {
     private int userId;
     private String name;
     private ArrayList<OrderDetail> orderDetails;
+    private int gameId;
 
     // Constructeurs
     public Order() {
     }
 
-    public Order(int id, Date date, float amount, int totalQuantity, int userId, String name, ArrayList<OrderDetail> orderDetails) {
+    public Order(int id, Date date, float amount, int totalQuantity, int userId, String name, ArrayList<OrderDetail> orderDetails, int gameId) {
         setId(id);
         setDate(date);
         setAmount(amount);
@@ -27,6 +28,7 @@ public class Order implements Serializable {
         setUserId(userId);
         setName(name);
         setOrderDetails(orderDetails);
+        setGameId(gameId);
     }
 
     // Getters et setters
@@ -84,6 +86,14 @@ public class Order implements Serializable {
 
 	public void setOrderDetails(ArrayList<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
+	}
+
+	public int getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(int gameId) {
+		this.gameId = gameId;
 	}
 
 	// Méthode toString pour l'affichage

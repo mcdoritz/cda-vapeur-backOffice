@@ -197,6 +197,7 @@ public class OrderDAO {
                 object.setAmount(resultat.getFloat("amount"));
                 object.setTotalQuantity(resultat.getInt("quantity"));
                 object.setName(resultat.getString("title"));
+                object.setGameId(resultat.getInt("game_id"));
                 
                 ordersList.add(object);
             }
