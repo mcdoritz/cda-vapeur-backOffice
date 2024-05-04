@@ -42,6 +42,21 @@
 		</jsp-property-group>
 	</jsp-config>
 
+	<servlet>
+		<servlet-name>default</servlet-name>
+		<servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+		<init-param>
+			<param-name>listings</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/assets/images/games/</url-pattern>
+	</servlet-mapping>
+
+
 	<filter>
 		<filter-name>CharsetFilter</filter-name>
 		<filter-class>com.vapeur.config.CharsetFilter</filter-class>
@@ -55,16 +70,6 @@
 		<servlet-name>default</servlet-name>
 		<url-pattern>/assets/*</url-pattern>
 	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>API</servlet-name>
-		<servlet-class>com.example.API</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>API</servlet-name>
-		<url-pattern>/api/*</url-pattern>
-	</servlet-mapping>
-
 
 	<error-page>
 		<error-code>404</error-code>
