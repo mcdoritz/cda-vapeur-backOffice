@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	version="4.0">
 	<display-name>Vapeur-Back-Office</display-name>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
@@ -14,7 +14,7 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 	<jsp-config>
 		<jsp-property-group>
 			<url-pattern>/WEB-INF/app/*</url-pattern>
@@ -24,7 +24,7 @@
 			<include-coda>/WEB-INF/layout/footer.jsp</include-coda>
 			<include-coda>/WEB-INF/layout/foot.jsp</include-coda>
 		</jsp-property-group>
-		
+
 		<jsp-property-group>
 			<url-pattern>/WEB-INF/login/*</url-pattern>
 			<include-prelude>/WEB-INF/jstl.jsp</include-prelude>
@@ -51,11 +51,20 @@
 		<url-pattern>/WEB-INF/*</url-pattern>
 	</filter-mapping>
 
-
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>/assets/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>API</servlet-name>
+		<servlet-class>com.example.API</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>API</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+
 
 	<error-page>
 		<error-code>404</error-code>
@@ -66,7 +75,7 @@
 		<error-code>403</error-code>
 		<location>/WEB-INF/error/403.jsp</location>
 	</error-page>
-	
+
 	<error-page>
 		<error-code>405</error-code>
 		<location>/WEB-INF/error/405.jsp</location>
