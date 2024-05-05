@@ -13,13 +13,8 @@
 				<div class="dropdown-menu dropdown-menu-right profile-dropdown ">
 					<!-- item-->
 					<div class="dropdown-item noti-title">
-						<h6 class="m-0">Welcome !</h6>
+						<h6 class="m-0">Vapeur Back Office </h6>
 					</div>
-
-					<!-- item-->
-					<a href="javascript:void(0);" class="dropdown-item notify-item">
-						<i class="dripicons-user"></i> <span>My Account</span>
-					</a>
 
 					<div class="dropdown-divider"></div>
 
@@ -33,24 +28,15 @@
 		</ul>
 
 		<ul class="list-unstyled menu-left mb-0">
-			<li class="float-left"><a href="index.html" class="logo"> <span
-					class="logo-lg"> <img src="assets/images/logo-light.png"
-						alt="" height="22">
-				</span> <span class="logo-sm"> <img src="assets/images/logo-sm.png"
-						alt="" height="24">
+			<li class="float-left"><a href="dashboard" class="logo"> <span
+					class="logo-lg"> <img src="assets/images/logo_vapeur.png"
+						alt="" height="50">
+				</span> <span class="logo-sm"> <img src="assets/images/logo_vapeur.png"
+						alt="" height="50">
 				</span>
 			</a></li>
-			<li class="float-left"><a
-				class="button-menu-mobile navbar-toggle">
-					<div class="lines">
-						<span></span> <span></span> <span></span>
-					</div>
-			</a></li>
 			<li class="app-search d-none d-md-block">
-				<form>
-					<input type="text" placeholder="Search..." class="form-control">
-					<button type="submit" class="sr-only"></button>
-				</form>
+				<h1>Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice </h1>
 			</li>
 		</ul>
 	</div>
