@@ -245,6 +245,7 @@ public class GameDAO {
 			LanguageDAO languagedao = new LanguageDAO();
 			DeveloperDAO developerdao = new DeveloperDAO();
 			CommentDAO commentdao = new CommentDAO();
+			VideoDAO videodao = new VideoDAO();
 
 			while (resultat.next()) {
 
@@ -260,6 +261,7 @@ public class GameDAO {
 				object.setRequires3rdPartyAccount(resultat.getBoolean("requires_3rd_party_account"));
 				object.setStock(resultat.getInt("stock"));
 				object.setStatus(resultat.getByte("status"));
+				object.setVideos(videodao.getByGameId(game_id));
 
 				String tags = resultat.getString("tags");
 				String[] arrayTags = tags.split(" ");
@@ -873,7 +875,7 @@ public class GameDAO {
 					index++;
 				}
 			}
-
+			ps.setInt(index, 2);
 			ResultSet resultat = ps.executeQuery();
 
 			int total = 0;

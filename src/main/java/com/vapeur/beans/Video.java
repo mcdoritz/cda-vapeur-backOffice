@@ -6,18 +6,16 @@ public class Video implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private int id;
-    private String name;
-    private int videoType;
+    private String url;
     private int gameId;
 
     // Constructeurs
     public Video() {
     }
 
-    public Video(int id, String name, int videoType, int gameId) {
+    public Video(int id, String url, int gameId) {
         setId(id);
-        setName(name);
-        setVideoType(videoType);
+        setUrl(url);
         setGameId(gameId);
     }
 
@@ -30,23 +28,15 @@ public class Video implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getUrl() {
+		return url;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public int getVideoType() {
-        return videoType;
-    }
-
-    public void setVideoType(int videoType) {
-        this.videoType = videoType;
-    }
-
-    public int getGameId() {
+	public int getGameId() {
         return gameId;
     }
 
@@ -54,14 +44,9 @@ public class Video implements Serializable {
         this.gameId = gameId;
     }
 
-    // Méthode toString pour l'affichage
-    @Override
-    public String toString() {
-        return "Video{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", videoType=" + videoType +
-                ", gameId=" + gameId +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Video [id=" + id + ", url=" + url + ", gameId=" + gameId + "]";
+	}
+
 }

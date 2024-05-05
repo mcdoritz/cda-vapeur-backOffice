@@ -31,6 +31,7 @@ import com.vapeur.beans.Genre;
 import com.vapeur.beans.Language;
 import com.vapeur.beans.Mode;
 import com.vapeur.beans.Platform;
+import com.vapeur.beans.Video;
 import com.vapeur.config.MajCommentsToApprove;
 import com.vapeur.dao.DeveloperDAO;
 import com.vapeur.dao.GameDAO;
@@ -38,6 +39,7 @@ import com.vapeur.dao.GenreDAO;
 import com.vapeur.dao.LanguageDAO;
 import com.vapeur.dao.ModeDAO;
 import com.vapeur.dao.PlatformDAO;
+import com.vapeur.dao.VideoDAO;
 
 /**
  * Servlet implementation class GameDetails
@@ -74,28 +76,48 @@ public class GameMedias extends HttpServlet {
 					GameDAO gamedao = new GameDAO();
 					Game game = new Game();
 					game = gamedao.getById(game_id);
-					
-					//Images du jeu
+
+					// Images du jeu
 					String relativeDirectoryPath = "/assets/images/games/" + game.getId() + "/";
 					String absoluteDirectoryPath = getServletContext().getRealPath(relativeDirectoryPath);
 					File directory = new File(absoluteDirectoryPath);
-					
+
 					ArrayList<String> images = new ArrayList<>();
 					prln(relativeDirectoryPath);
 					if (directory.isDirectory()) {
-					    File[] files = directory.listFiles();
-					    prln("nombre d'images : " + files.length);
-					    for (File file : files) {
-					    	
-					    	images.add(file.getName());
+						File[] files = directory.listFiles();
+						prln("nombre d'images : " + files.length);
+						for (File file : files) {
+							prln(file.getName());
+							images.add(file.getName());
 
-					    }
+						}
 					} else {
-					    System.out.println("Le chemin spécifié n'est pas un répertoire.");
+						System.out.println("Le chemin spécifié n'est pas un répertoire.");
 					}
-					
+
+					String relativeDirectoryPathLOGO = "/assets/images/games/" + game.getId() + "/logo/";
+					String absoluteDirectoryPathLOGO = getServletContext().getRealPath(relativeDirectoryPathLOGO);
+					File directoryLOGO = new File(absoluteDirectoryPathLOGO);
+
+					String logo = "nologo.png";
+					prln(relativeDirectoryPathLOGO);
+					if (directoryLOGO.isDirectory()) {
+						File[] files = directoryLOGO.listFiles();
+						prln("nombre d'images : " + files.length);
+						for (File file : files) {
+							prln("FILENAME : " + file.getName());
+							logo = game.getId() + "/logo/" + file.getName();
+
+						}
+						prln(logo);
+					} else {
+						System.out.println("Le chemin spécifié n'est pas un répertoire.");
+					}
+
+					request.setAttribute("logo", logo);
 					request.setAttribute("images", images);
-					
+
 					request.setAttribute("game", game);
 					request.getRequestDispatcher("WEB-INF/app/gameMedias.jsp").forward(request, response);
 				} else {
@@ -131,41 +153,123 @@ public class GameMedias extends HttpServlet {
 	            	int game_id = Integer.valueOf(request.getParameter("id"));
 	            	prln(game_id);
 	            	
-	            	if(request.getParameter("imageDelete") == null) {
-	            		if (ServletFileUpload.isMultipartContent(request)) {
-			                ServletRequestContext ctx = new ServletRequestContext(request); // Utiliser ServletRequestContext
-			                try {
-			                    List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(ctx);
-			                    for (FileItem item : items) {
-			                        if (!item.isFormField()) {
-			                            String fileName = new File(item.getName()).getName();
-			                            String relativePath = "/assets/images/games/" + game_id + "/";
-			                            String absolutePath = getServletContext().getRealPath(relativePath);
-			                            String filePath = absolutePath + fileName; // Chemin où les fichiers seront sauvegardés
-			                            File folder = new File(absolutePath);
-			                            if (!folder.exists()) {
-			                                if (folder.mkdirs()) {
-			                                    prln("Dossier créé avec succès : " + folder.getAbsolutePath());
-			                                } else {
-			                                    prln("Impossible de créer le dossier : " + folder.getAbsolutePath());
-			                                }
-			                            } else {
-			                                prln("Le dossier existe déjà : " + folder.getAbsolutePath());
-			                            }
-			                            File uploadedFile = new File(filePath);
-			                            item.write(uploadedFile);
-			                        }
-			                    }
-			                    prln("Tous les fichiers ont été téléchargés avec succès.");
-			                } catch (IOException e) {
-			                    prln("Erreur lors du téléchargement des fichiers : " + e.getMessage());
-			                } catch (Exception e) {
-			                    prln("Erreur inattendue : " + e.getMessage());
-			                }
-			            } else {
-			                prln("Le formulaire ne prend pas en charge le téléchargement de fichiers.");
-			            }
-	            	}else {
+	            	if(request.getParameter("imageDelete") == null && request.getParameter("videoDelete") == null) {
+	            		
+	            		// Logo
+	            		if(request.getParameter("type") != null) {
+	            			prln("type");
+	            			if(request.getParameter("type").equals("logo")) {
+	            				prln("LOGO UPLOAD");
+	    	            		if (ServletFileUpload.isMultipartContent(request)) {
+	    			                ServletRequestContext ctx = new ServletRequestContext(request); // Utiliser ServletRequestContext
+	    			                try {
+	    			                    List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(ctx);
+	    			                    for (FileItem item : items) {
+	    			                        if (!item.isFormField()) {
+	    			                            String fileName = new File(item.getName()).getName();
+	    			                            prln(fileName);
+	    			                            String extension = fileName.substring(fileName.lastIndexOf("."));
+					                            prln("extension : " + extension);
+					                            if(extension.equals(".jpg")) {
+					                            	String relativePath = "/assets/images/games/" + game_id + "/logo/";
+		    			                            String absolutePath = getServletContext().getRealPath(relativePath);
+		    			                            String filePath = absolutePath + "logo.jpg"; // Chemin où les fichiers seront sauvegardés
+		    			                            File folder = new File(absolutePath);
+		    			                            if (!folder.exists()) {
+		    			                                if (folder.mkdirs()) {
+		    			                                    prln("Dossier créé avec succès : " + folder.getAbsolutePath());
+		    			                                } else {
+		    			                                    prln("Impossible de créer le dossier : " + folder.getAbsolutePath());
+		    			                                }
+		    			                            } else {
+		    			                                prln("Le dossier existe déjà : " + folder.getAbsolutePath());
+		    			                            }
+		    			                            File[] files = folder.listFiles();
+		    			                            // Parcourir les fichiers et les supprimer
+		    			                            if (files != null) {
+		    			                                for (File file : files) {
+		    			                                	file.delete();
+		    			                                }
+		    			                            }
+		    			                            File uploadedFile = new File(filePath);
+		    			                            item.write(uploadedFile);
+					                            	
+					                            	
+					                            }else {
+					                            	prln("Le format du fichier n'est pas bon");
+					                            	request.setAttribute("errorMsg","Le format du fichier n'est pas bon" );
+					                            }
+	    			                            
+	    			                        }
+	    			                    }
+	    			                    prln("Tous les fichiers ont été téléchargés avec succès.");
+	    			                } catch (IOException e) {
+	    			                    prln("Erreur lors du téléchargement des fichiers : " + e.getMessage());
+	    			                } catch (Exception e) {
+	    			                    prln("Erreur inattendue : " + e.getMessage());
+	    			                }
+	    			            } else {
+	    			                prln("Le formulaire ne prend pas en charge le téléchargement de fichiers.");
+	    			            } 
+	    	            		
+	            			}else if (request.getParameter("type").equals("video")) {
+									prln("VIDEO UPLOAD");
+									// Vérif formulaire
+
+									Map<String, String[]> champs = request.getParameterMap();
+									VideoDAO videodao = new VideoDAO();
+									
+									if(request.getParameter("video") != null) {
+										Video video = new Video();
+										video.setGameId(game_id);
+										video.setUrl(request.getParameter("video"));
+										videodao.save(video);
+									}else {
+										request.setAttribute("errorMsg", "Erreur avec l'URL de la vidéo.");
+									}
+
+		            		}else if (request.getParameter("type").equals("images")){
+		            			// Images
+		            			prln("IMAGE(S) UPLOAD");
+			            		if (ServletFileUpload.isMultipartContent(request)) {
+					                ServletRequestContext ctx = new ServletRequestContext(request); // Utiliser ServletRequestContext
+					                try {
+					                    List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(ctx);
+					                    for (FileItem item : items) {
+					                        if (!item.isFormField()) {
+					                            String fileName = new File(item.getName()).getName();
+					                            String relativePath = "/assets/images/games/" + game_id + "/";
+					                            String absolutePath = getServletContext().getRealPath(relativePath);
+					                            String filePath = absolutePath + fileName; // Chemin où les fichiers seront sauvegardés
+					                            File folder = new File(absolutePath);
+					                            if (!folder.exists()) {
+					                                if (folder.mkdirs()) {
+					                                    prln("Dossier créé avec succès : " + folder.getAbsolutePath());
+					                                } else {
+					                                    prln("Impossible de créer le dossier : " + folder.getAbsolutePath());
+					                                }
+					                            } else {
+					                                prln("Le dossier existe déjà : " + folder.getAbsolutePath());
+					                            }
+					                            File uploadedFile = new File(filePath);
+					                            item.write(uploadedFile);
+					                        }
+					                    }
+					                    prln("Tous les fichiers ont été téléchargés avec succès.");
+					                } catch (IOException e) {
+					                    prln("Erreur lors du téléchargement des fichiers : " + e.getMessage());
+					                } catch (Exception e) {
+					                    prln("Erreur inattendue : " + e.getMessage());
+					                }
+					            } else {
+					                prln("Le formulaire ne prend pas en charge le téléchargement de fichiers.");
+					            }
+		            		}
+	            		}
+	            		
+	            		
+	            		
+	            	}else if (request.getParameter("imageDelete") != null){
 	            		prln("suppression d'images");
 	            		//Vérif formulaire
 	    				
@@ -209,6 +313,32 @@ public class GameMedias extends HttpServlet {
 	    		        	    System.out.println("Impossible de supprimer le fichier : " + cheminToDelete);
 	    		        	}
 	    		        }
+	            	}else if (request.getParameter("videoDelete") != null){
+	            		prln("VIDEO DELETE");
+						// Vérif formulaire
+
+						Map<String, String[]> champs = request.getParameterMap();
+						VideoDAO videodao = new VideoDAO();
+
+						// Parcourir le map pour récupérer les valeurs associées à chaque nom de champ
+						for (Map.Entry<String, String[]> entry : champs.entrySet()) {
+							String name = entry.getKey(); // Tous les names
+							String[] values = entry.getValue(); // Tableau des données entrées
+
+							// Afficher les valeurs associées à chaque nom de champ
+							prln("Name du champ : " + name);
+							if(!name.equals("id")) {
+								for (String video_id : values) {
+									prln(video_id);
+									if(video_id != null && video_id != "") {
+										videodao.delete(Integer.valueOf(video_id));
+									}
+									
+								}
+							}
+							
+
+						}
 	            	}
 	            	
 	            }
@@ -216,13 +346,15 @@ public class GameMedias extends HttpServlet {
 	        } else {
 	            response.sendRedirect("login");
 	        }
-	    } catch (Exception e) {
-	        // TODO Auto-generated catch block
-	        prln("erreur : " + e.getMessage());
-	        request.setAttribute("errorMsg", e.getMessage());
-	        response.sendRedirect("login");
-	    }
-	}
+	    }catch(
 
+	Exception e)
+	{
+		// TODO Auto-generated catch block
+		prln("erreur : " + e.getMessage());
+		request.setAttribute("errorMsg", e.getMessage());
+		response.sendRedirect("login");
+	}
+}
 
 }

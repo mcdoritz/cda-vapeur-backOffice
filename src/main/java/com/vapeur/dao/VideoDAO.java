@@ -17,25 +17,23 @@ public class VideoDAO {
     public void save(Video object) {
         try {
             if (object.getId() != 0) {
-                String query = "UPDATE videos SET name = ?, video_type = ?, game_id = ? WHERE id = ?";
+                String query = "UPDATE videos SET url = ?, game_id = ? WHERE id = ?";
                 
                 try (PreparedStatement ps = Database.connexion.prepareStatement(query)) {
-                    ps.setString(1, object.getName());
-                    ps.setInt(2, object.getVideoType());
-                    ps.setInt(3, object.getGameId());
-                    ps.setInt(4, object.getId());
+                    ps.setString(1, object.getUrl());
+                    ps.setInt(2, object.getGameId());
+                    ps.setInt(3, object.getId());
 
                     ps.executeUpdate();
                 }
                 String objectInfos = "Video ID: " + object.getId();
                 bddSays("update", true, object.getId(), objectInfos);
             } else {
-                String query = "INSERT INTO videos (name, video_type, game_id) VALUES (?, ?, ?)";
+                String query = "INSERT INTO videos (url, game_id) VALUES (?, ?)";
                 
                 try (PreparedStatement ps = Database.connexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-                    ps.setString(1, object.getName());
-                    ps.setInt(2, object.getVideoType());
-                    ps.setInt(3, object.getGameId());
+                    ps.setString(1, object.getUrl());
+                    ps.setInt(2, object.getGameId());
 
                     ps.executeUpdate();
                     
@@ -66,8 +64,7 @@ public class VideoDAO {
             
             while (resultat.next()) {
                 object.setId(resultat.getInt("id"));
-                object.setName(resultat.getString("name"));
-                object.setVideoType(resultat.getInt("video_type"));
+                object.setUrl(resultat.getString("url"));
                 object.setGameId(resultat.getInt("game_id"));
             }
             
@@ -78,6 +75,33 @@ public class VideoDAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             bddSays("read", false, video_id, null);
+            return null;
+        }
+    }
+    
+    public ArrayList<Video> getByGameId(int game_id) {
+        try {
+            PreparedStatement ps = Database.connexion.prepareStatement("SELECT * FROM videos WHERE game_id = ?");
+            ps.setInt(1, game_id);
+
+            ResultSet resultat = ps.executeQuery();
+
+           
+            ArrayList<Video> videos = new ArrayList<>();
+            
+            while (resultat.next()) {
+            	Video object = new Video();
+                object.setId(resultat.getInt("id"));
+                object.setUrl(resultat.getString("url"));
+                object.setGameId(resultat.getInt("game_id"));
+                videos.add(object);
+            }
+            
+            return videos;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            bddSays("read", false, game_id, null);
             return null;
         }
     }
@@ -93,8 +117,7 @@ public class VideoDAO {
                 Video object = new Video();
 
                 object.setId(resultat.getInt("id"));
-                object.setName(resultat.getString("name"));
-                object.setVideoType(resultat.getInt("video_type"));
+                object.setUrl(resultat.getString("name"));
                 object.setGameId(resultat.getInt("game_id"));
 
                 videosList.add(object);
