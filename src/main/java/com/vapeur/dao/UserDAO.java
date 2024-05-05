@@ -21,8 +21,6 @@ public class UserDAO {
 	public Boolean save(User object, Boolean admin) throws DAOException {
 		try {
 			
-			String hashPassword = BCrypt.hashpw(object.getPassword(), BCrypt.gensalt());
-
 			if (object.getId() != 0) {
 
 			       String query = "UPDATE users SET email = ?, nickname = ?, password = ?, firstname = ?, lastname = ?, active = ?, shipping_address = ?, avatar = ? WHERE id = ?";
@@ -30,10 +28,12 @@ public class UserDAO {
 			        try (PreparedStatement ps = Database.connexion.prepareStatement(query)) {
 			            ps.setString(1, object.getEmail());
 			            ps.setString(2, object.getNickname());
-			            if(admin) {
+			            if(!admin) {
+			            	prln("admin");
 			            	ps.setString(3, object.getPassword());
 			            }else {
-			            	ps.setString(3, hashPassword);
+			            	prln("pas admin");
+			            	ps.setString(3, BCrypt.hashpw(object.getPassword(), BCrypt.gensalt()));
 			            }
 			            
 			            ps.setString(4, object.getFirstname());
@@ -55,7 +55,7 @@ public class UserDAO {
 		        try (PreparedStatement ps = Database.connexion.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 		            ps.setString(1, object.getEmail());
 		            ps.setString(2, object.getNickname());
-		            ps.setString(3, hashPassword);
+		            ps.setString(3, BCrypt.hashpw(object.getPassword(), BCrypt.gensalt()));
 		            ps.setString(4, object.getFirstname());
 		            ps.setString(5, object.getLastname());
 		            ps.setBoolean(6, true); // Hé oui !

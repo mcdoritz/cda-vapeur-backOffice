@@ -262,15 +262,16 @@ public class GameDAO {
 				object.setStock(resultat.getInt("stock"));
 				object.setStatus(resultat.getByte("status"));
 				object.setVideos(videodao.getByGameId(game_id));
-
+				
 				String tags = resultat.getString("tags");
-				String[] arrayTags = tags.split(" ");
 				ArrayList<String> arrayListTags = new ArrayList<>();
+				if(tags != null) {
+					String[] arrayTags = tags.split(" ");
 
-				for (String t : arrayTags) {
-					arrayListTags.add(t.toUpperCase());
+					for (String t : arrayTags) {
+						arrayListTags.add(t.toUpperCase());
+					}
 				}
-
 				object.setTags(arrayListTags);
 
 				object.setPlatform(platformdao.getById(resultat.getInt("platform_id")));
