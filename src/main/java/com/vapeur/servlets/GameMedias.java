@@ -4,7 +4,11 @@ import static com.vapeur.config.ConnexionVerification.checkAdmin;
 import static com.vapeur.config.Debug.prln;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +23,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.apache.tomcat.util.http.fileupload.RequestContext;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
@@ -231,7 +236,7 @@ public class GameMedias extends HttpServlet {
 		            		}else if (request.getParameter("type").equals("images")){
 		            			// Images
 		            			prln("IMAGE(S) UPLOAD");
-			            		if (ServletFileUpload.isMultipartContent(request)) {
+			            		/*if (ServletFileUpload.isMultipartContent(request)) {
 					                ServletRequestContext ctx = new ServletRequestContext(request); // Utiliser ServletRequestContext
 					                try {
 					                    List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(ctx);
@@ -263,11 +268,90 @@ public class GameMedias extends HttpServlet {
 					                }
 					            } else {
 					                prln("Le formulaire ne prend pas en charge le téléchargement de fichiers.");
-					            }
-		            		}
+					            }*/
+		            			
+	            		
+		            			// Code pour envoyer la requête de création de dossier
+		            			String frontofficeUrl = "http://localhost:8080/Vapeur/uploadImages";
+		            			URL url = new URL(frontofficeUrl);
+		            			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		            			connection.setRequestMethod("POST");
+		            			connection.setDoOutput(true);
+		            			connection.setRequestProperty("Content-Type", "application/json");
+
+		            			String requestData = "{\"folderName\": \"assets/img/games/" + game_id + "/\"}";
+		            			OutputStream outputStream = connection.getOutputStream();
+		            			outputStream.write(requestData.getBytes());
+		            			outputStream.flush();
+
+		            			int responseCode = connection.getResponseCode();
+		            			if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CONFLICT) {
+		            			    prln("Dossier existant ou créé avec succès sur le serveur front office.");
+		            			    outputStream.close();
+		            			    connection.disconnect();
+
+		            			    // Code pour envoyer les fichiers au serveur front office (à placer après la réponse de création de dossier)
+		            			    if (ServletFileUpload.isMultipartContent(request)) {
+		            			        // Vérifier si le dossier existe déjà
+		            			    	String frontOfficeUrlFolderImage = "http://localhost:8080/Vapeur/assets/img/games/" + game_id + "/";
+		            			        URL urlFolderImages = new URL(frontOfficeUrlFolderImage);
+		            			        connection = (HttpURLConnection) urlFolderImages.openConnection();
+		            			        connection.setRequestMethod("HEAD"); // Utiliser HEAD pour vérifier l'existence du dossier sans obtenir son contenu
+		            			        connection.connect();
+		            			        int folderResponseCode = connection.getResponseCode();
+		            			        prln(frontOfficeUrlFolderImage);
+		            			        if (1 < 2) {
+		            			            // Le dossier existe déjà, envoyer les fichiers
+		            			            connection = (HttpURLConnection) url.openConnection();
+		            			            connection.setRequestMethod("POST");
+		            			            connection.setDoOutput(true);
+		            			            connection.setRequestProperty("Content-Type", "application/octet-stream");
+
+		            			            ServletRequestContext ctx = new ServletRequestContext(request);
+		            			            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(ctx);
+		            			            for (FileItem item : items) {
+		            			                if (!item.isFormField()) {
+		            			                    String fileName = new File(item.getName()).getName();
+		            			                    String relativePath = "/assets/img/games/" + game_id + "/";
+		            			                    String absolutePath = getServletContext().getRealPath(relativePath);
+		            			                    String filePath = absolutePath + fileName; // Chemin où les fichiers seront sauvegardés
+		            			                    File uploadedFile = new File(filePath);
+		            			                    prln("uplaoded file" + uploadedFile);
+
+		            			                    // Envoi du fichier au serveur frontoffice
+		            			                    outputStream = connection.getOutputStream();
+		            			                    FileInputStream fileInputStream = new FileInputStream(uploadedFile);
+
+		            			                    // Copie du fichier vers la sortie de la requête HTTP
+		            			                    IOUtils.copy(fileInputStream, outputStream);
+		            			                    outputStream.flush();
+
+		            			                    int fileResponseCode = connection.getResponseCode();
+		            			                    if (fileResponseCode == HttpURLConnection.HTTP_OK) {
+		            			                        prln("Fichier envoyé avec succès au serveur frontoffice.");
+		            			                    } else {
+		            			                        prln("Erreur lors de l'envoi du fichier au serveur frontoffice. Code de réponse : " + fileResponseCode);
+		            			                    }
+
+		            			                    fileInputStream.close();
+		            			                    outputStream.close();
+		            			                }
+		            			            }
+		            			            prln("Tous les fichiers ont été téléchargés avec succès.");
+		            			        } else if (folderResponseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+		            			            prln("Le dossier n'existe pas sur le serveur front office.");
+		            			        } else {
+		            			            prln("Erreur lors de la vérification de l'existence du dossier sur le serveur front office. Code de réponse : " + folderResponseCode);
+		            			        }
+		            			    } else {
+		            			        prln("Le formulaire ne prend pas en charge le téléchargement de fichiers.");
+		            			    }
+		            			} else {
+		            			    prln("Erreur lors de la création du dossier sur le serveur front office. Code de réponse : " + responseCode);
+		            			}
+		            			connection.disconnect();
+
 	            		}
-	            		
-	            		
 	            		
 	            	}else if (request.getParameter("imageDelete") != null){
 	            		prln("suppression d'images");
@@ -345,6 +429,7 @@ public class GameMedias extends HttpServlet {
 	            doGet(request, response);
 	        } else {
 	            response.sendRedirect("login");
+	        }
 	        }
 	    }catch(
 

@@ -36,7 +36,7 @@
 				</span>
 			</a></li>
 			<li class="app-search d-none d-md-block">
-				<h1>Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice </h1>
+				<h1>Vapeur Backoffice Vapeur Backoffice </h1>
 			</li>
 		</ul>
 	</div>
