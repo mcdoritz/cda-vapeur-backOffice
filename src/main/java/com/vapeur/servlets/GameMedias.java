@@ -256,12 +256,18 @@ public class GameMedias extends HttpServlet {
 					                        }
 					                    }
 					                    prln("Tous les fichiers ont été téléchargés avec succès.");
+					                    request.setAttribute("infoMSg", "Tous les fichiers ont été téléchargés avec succès.");
 					                } catch (IOException e) {
 					                    prln("Erreur lors du téléchargement des fichiers : " + e.getMessage());
+					                    request.setAttribute("errorMsg", "Erreur lors du téléchargement des fichiers : " + e.getMessage());
+					                    doGet(request, response);
 					                } catch (Exception e) {
+					                	request.setAttribute("errorMsg", "Erreur inattendue : " + e.getMessage());
 					                    prln("Erreur inattendue : " + e.getMessage());
+					                    doGet(request, response);
 					                }
 					            } else {
+					            	request.setAttribute("errorMsg", "Le formulaire ne prend pas en charge le téléchargement de fichiers." );
 					                prln("Le formulaire ne prend pas en charge le téléchargement de fichiers.");
 					            }
 		            		}

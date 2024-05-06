@@ -19,7 +19,7 @@
 					<div class="dropdown-divider"></div>
 
 					<!-- item-->
-					<a href="javascript:void(0);" class="dropdown-item notify-item">
+					<a href="logout" class="dropdown-item notify-item">
 						<i class="dripicons-power"></i> <span>Logout</span>
 					</a>
 
@@ -36,7 +36,7 @@
 				</span>
 			</a></li>
 			<li class="app-search d-none d-md-block">
-				<h1>Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice Vapeur Backoffice </h1>
+				<h1>Vapeur Backoffice </h1>
 			</li>
 		</ul>
 	</div>
